@@ -1,0 +1,43 @@
+{
+  "plugins": [
+    "plugins/markdown"
+  ],
+  "source": {
+    "include": [
+      "./src",
+      "package.json",
+      "README.md"
+    ],
+    "includePattern": ".js$",
+    "excludePattern": "(node_modules/|docs)"
+  },
+  "tags": {
+    "allowUnknownTags": [
+      "typedef"
+    ],
+    "dictionaries": [
+      "jsdoc",
+      "closure"
+    ]
+  },
+  "markdown": {
+    "parser": "gfm",
+    "hardwrap": true
+  },
+  "templates": {
+    "name": "Chop Tools",
+    "footerText": "A discord bot framework.",
+    "logo": {
+      "url": "#",
+      "width": "150px",
+      "height": "13px",
+      "link": "https: //github.com/joaquimnet/"
+    }
+  },
+  "opts": {
+    "template": "node_modules/tui-jsdoc-template",
+    "encoding": "utf8",
+    "recurse": true,
+    "tutorials": "./tutorials"
+  }
+}

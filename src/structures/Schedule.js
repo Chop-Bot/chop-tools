@@ -1,0 +1,58 @@
+const nodeSchedule = require('node-schedule');
+const moment = require('moment');
+
+/**
+ * Loads the tasks it receives and schedule them to be run.
+ * @namespace
+ */
+class Schedule {
+  /**
+   * Manages tasks
+   * @param {ChopClient} client The client that instantied this schedule
+   * @param {Map<String, Task>} tasks The tasks to schedule mapped by their name
+   */
+  constructor(client, tasks) {
+    if (!client) {
+      throw new Error('Missing client in Schedule constructor.');
+    }
+    if (!client) {
+      throw new Error('Missing tasks in Schedule constructor.');
+    }
+    this.client = client;
+    this.tasks = tasks;
+    this.tasks.forEach(t => this.create(t));
+    this.client.events.on('kill', () => {
+      this.client.events.emit('info', '[Schedule] Clearing task jobs.');
+      this.tasks.forEach(t => t.job.cancel());
+    });
+  }
+
+  create(newTask) {
+    const task = newTask;
+    task.client = this.client;
+    if (!task.name) {
+      this.client.events.emit('warn', `[Schedule] Task ${task} does not have a name. Ignoring it.`);
+      return;
+    }
+    let ocurrence;
+    if (task.type === 'once') {
+      if (!moment(task.time).isAfter(moment())) {
+        this.client.events.emit(
+          'warn',
+          '[Schedule] Time for task',
+          task.name,
+          'already passed. Will not schedule.',
+        );
+        return;
+      }
+      ocurrence = moment(task.time).toDate();
+    }
+    if (task.type === 'repeat') {
+      ocurrence = task.time;
+    }
+    task.job = nodeSchedule.scheduleJob(ocurrence, () => task.run());
+    this.tasks.set(task.name, task);
+  }
+}
+
+module.exports = Schedule;
