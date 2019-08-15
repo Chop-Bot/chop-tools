@@ -1,9 +1,11 @@
-const ChopClient = require('./ChopClient');
+const Client = require('./ChopClient');
+const Prompter = require('./prompter/Prompter');
 const Command = require('./structures/Command');
 const Task = require('./structures/Task');
 
 module.exports = {
-  ChopClient,
+  Client,
+  Prompter,
   Command,
   Task,
 };

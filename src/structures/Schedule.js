@@ -1,6 +1,8 @@
 const nodeSchedule = require('node-schedule');
 const moment = require('moment');
 
+const TaskStore = require('../stores/TaskStore');
+
 /**
  * Loads the tasks it receives and schedule them to be run.
  * @namespace
@@ -19,7 +21,7 @@ class Schedule {
       throw new Error('Missing tasks in Schedule constructor.');
     }
     this.client = client;
-    this.tasks = tasks;
+    this.tasks = new TaskStore(client, tasks);
     this.tasks.forEach(t => this.create(t));
     this.client.events.on('kill', () => {
       this.client.events.emit('info', '[Schedule] Clearing task jobs.');
@@ -29,7 +31,7 @@ class Schedule {
 
   create(newTask) {
     const task = newTask;
-    task.client = this.client;
+    Object.defineProperty(task, 'client', { value: this.client });
     if (!task.name) {
       this.client.events.emit('warn', `[Schedule] Task ${task} does not have a name. Ignoring it.`);
       return;

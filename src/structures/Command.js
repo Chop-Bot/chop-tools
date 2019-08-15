@@ -35,8 +35,9 @@ const VALIDATION = {
     .items(V.allow('text', 'dm'))
     .label('RunIn'),
   hidden: V.bool().label('Hidden'),
-  args: V.number()
+  args: V.array()
     .min(0)
+    .items(V.string())
     .label('Args'),
   delete: V.bool().label('Delete'),
   run: V.func()
@@ -64,7 +65,7 @@ class Command {
       cooldown: 3,
       runIn: ['text'],
       hidden: false,
-      args: 0,
+      args: [],
       delete: false,
       run: () => {},
     };
@@ -79,6 +80,11 @@ class Command {
     }
   }
 
+  /**
+   * The command name.
+   * @name Command#name
+   * @type {String}
+   */
   set name(n) {
     this._name = validateOrThrow(n, VALIDATION.name);
   }
@@ -92,6 +98,11 @@ class Command {
     return this;
   }
 
+  /**
+   * The command description.
+   * @name Command#description
+   * @type {String}
+   */
   set description(n) {
     this._description = validateOrThrow(n, VALIDATION.description);
   }
@@ -105,6 +116,11 @@ class Command {
     return this;
   }
 
+  /**
+   * How to use the command.
+   * @name Command#usage
+   * @type {String}
+   */
   set usage(n) {
     this._usage = validateOrThrow(n, VALIDATION.usage);
   }
@@ -118,6 +134,11 @@ class Command {
     return this;
   }
 
+  /**
+   * The text displayed when the user uses help [command name].
+   * @name Command#help
+   * @type {String}
+   */
   set help(n) {
     this._help = validateOrThrow(n, VALIDATION.help);
   }
@@ -131,6 +152,11 @@ class Command {
     return this;
   }
 
+  /**
+   * Alternative names for this command.
+   * @name Command#aliases
+   * @type {String[]}
+   */
   set aliases(n) {
     this._aliases = validateOrThrow(n, VALIDATION.aliases);
   }
@@ -144,12 +170,15 @@ class Command {
     return this;
   }
 
-  removeAliases(n) {
+  removeAlias(n) {
     this._aliases = this._aliases.filter(a => !n.includes(a));
     return this;
   }
 
   /**
+   * The permissions for this command.
+   * @name Command#permissions
+   * @type {external:PermissionResolvable[]}
    * @see Discord.Permissions.FLAGS
    */
   set permissions(n) {
@@ -161,7 +190,8 @@ class Command {
   }
 
   /**
-   * @param {PermissionResolvable} n
+   * Command permissions
+   * @param {external:PermissionResolvable} n
    * @see Discord.Permissions.FLAGS
    */
   setPermissions(n) {
@@ -169,6 +199,10 @@ class Command {
     return this;
   }
 
+  /** 
+   * Command cooldown in seconds.
+   * 
+   */
   set cooldown(n) {
     this._cooldown = validateOrThrow(n, VALIDATION.cooldown);
   }

@@ -18,10 +18,14 @@ class Task {
     }
 
     this.name = name;
-    // Once or Reocurring
+    // Once or Repeat
     this.type = type;
     // Cron or Date
     this.time = time;
+  }
+
+  async run() {
+    /* */
   }
 
   toString() {

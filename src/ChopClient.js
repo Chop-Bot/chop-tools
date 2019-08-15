@@ -1,11 +1,14 @@
 const Discord = require('discord.js');
 
-const FileLoader = require('./files/FileLoader');
-const ChopEvents = require('./structures/ChopEvents');
+const FileLoader = require('./FileLoader');
+const ChopEvents = require('./util/ChopEvents');
 const Schedule = require('./structures/Schedule');
+const CommandStore = require('./stores/CommandStore');
 const Command = require('./structures/Command');
 const Task = require('./structures/Task');
 const Util = require('./util/Util');
+
+const DEFAULTS = { root: require.main.path };
 
 /**
  * The discord.js Client class.
@@ -24,11 +27,13 @@ class ChopClient extends Discord.Client {
    * If not set, Chop will use the directory where the client was instantiated.
    * @param  {...any} args Arguments to pass to Discord.Client
    * @example
-   * const client = new ChopClient();
-   * client.login('Your Token');
+   * const client = new ChopClient('TOKEN');
    */
-  constructor(root = null, ...args) {
-    super(...args);
+  constructor(options = {}) {
+    // eslint-disable-next-line no-param-reassign
+    options = { ...DEFAULTS, ...options };
+    super(options);
+    this.root = options.root;
 
     /**
      * Instance of ChopEvents that will manage the Chop events.
@@ -37,37 +42,37 @@ class ChopClient extends Discord.Client {
      */
     this.events = new ChopEvents();
 
-    const fileLoader = new FileLoader(this, root);
+    const fileLoader = new FileLoader(this, this.root);
 
-    const commands = fileLoader.loadDirectory({
+    const commands = fileLoader.loadDirectorySync({
       dir: 'commands',
       importClass: Command,
       makeDir: true,
     });
-
     /**
      * A map of the commands loaded mapped by their name.
      * @name ChopClient#commands
-     * @type {Map<String, Command>}
+     * @type {CommandStore}
      */
-    this.commands = Util.mapByName(commands);
+    this.commands = new CommandStore(this, Util.mapByName(commands));
+    this.emit('debug', 'Loaded', this.commands.size, 'commands.');
 
-    console.log('Loaded', this.commands.size, 'commands.');
-
-    const tasks = fileLoader.loadDirectory({
+    const tasks = fileLoader.loadDirectorySync({
       dir: 'tasks',
       importClass: Task,
       makeDir: true,
     });
-
     /**
      * The Schedule instance that will manage the tasks.
      * @name ChopClient#schedule
      * @type {Schedule}
      */
     this.schedule = new Schedule(this, Util.mapByName(tasks));
+    this.emit('debug', 'Loaded', this.schedule.tasks.size, 'tasks.');
+  }
 
-    console.log('Loaded', this.schedule.tasks.size, 'tasks.');
+  async login(token) {
+    return super.login(token);
   }
 }
 

@@ -1,13 +1,95 @@
-class Filter {
+/**
+ * The discord.js EmojiIdentifierResolvable class.
+ * @external EmojiIdentifierResolvable
+ * @see {@link https://discord.js.org/#/docs/main/master/typedef/EmojiIdentifierResolvable|EmojiIdentifierResolvable}
+ */
+
+/**
+ * Used to generate filters for prompts.
+ * @namespace
+ */
+class PromptFilter {
   constructor() {
     this.allowBot = false;
     this.message = true;
     this.reaction = false;
-    this.prefix = null;
-    this.userId = null;
-    this.accept = null;
+    this.prefix = '';
+    this.userId = '';
+    this.emoji = [];
+  }
+
+  /**
+   * Wether or not to allow bots to respond to this prompt
+   * @param {Boolean} n
+   * @memberof PromptFilter
+   */
+  bot(n) {
+    this.allowBot = n;
+    return this;
+  }
+
+  /**
+   * Set this to true if this is a message prompt. False if its a reaction prompt.
+   * @param {Boolean} n
+   * @memberof PromptFilter
+   */
+  message(n) {
+    this.message = n;
+    this.reaction = !n;
+    return this;
+  }
+
+  /**
+   * Set this to true if this is a reaction prompt. False if its a message prompt.
+   * @param {Boolean} n
+   * @memberof PromptFilter
+   */
+  reaction(n) {
+    this.reaction = n;
+    this.message = !n;
+    return this;
+  }
+
+  /**
+   * If this is set, a message filter will only accept messages starting with this prefix.
+   * @param {String} prefixToAccept
+   * @memberof PromptFilter
+   */
+  prefix(prefixToAccept) {
+    this.prefix = prefixToAccept;
+    return this;
+  }
+
+  /**
+   * If this is set, the filter will only accept responses from this user.
+   * @param {String} id
+   * @memberof PromptFilter
+   */
+  userId(id) {
+    if (typeof id === 'string') {
+      this.userId = id;
+    } else if (id.id) {
+      this.userId = id.id;
+    }
+    return this;
+  }
+
+  /**
+   * If the prompt is emoji based, pass the emojis with this method.
+   * @param {external:EmojiIdentifierResolvable} theEmojis
+   * @memberof PromptFilter
+   */
+  emoji(theEmojis) {
+    if (theEmojis instanceof Array) {
+      this.emoji = [...theEmojis];
+    } else {
+      this.emoji = [theEmojis];
+    }
+    return this;
   }
 }
+
+module.exports = PromptFilter;
 
 // import Discord from 'discord.js';
 
