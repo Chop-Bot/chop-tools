@@ -1,87 +1,56 @@
-class CommandRunner {
+const Middleware = require('./util/Middleware');
+
+/**
+ * @typedef CommandCall
+ * @param {String} caller The id of the user that made the call.
+ * @param {String} commandName The command name.
+ * @param {String[]} args The arguments the command was called with.
+ * @param {Date} time When the command was called.
+ */
+
+/**
+ * Runs commands in Chop.
+ */
+class CommandRunner extends Middleware {
+  /**
+   * @param {ChopClient} client The client that instantiated this class.
+   * @param {ClientOptions} options The configuration object. TODO: Make a new typedef for this
+   */
   constructor(client, options) {
+    super();
     /**
      * The client that instantiated this class.
      * @type {ChopClient}
+     * @name CommandRunner#client
      */
     this.client = client;
+
+    /**
+     * The options for the CommandRunner.
+     * @type {ClientOptions}
+     * @name CommandRunner#options
+     */
+    this.options = options;
   }
 
-  use() {}
-
+  // Returns a CommandCall object or null
   parseMessage() {}
+
+  /**
+   * Handles command call errors.
+   * @param {CommandCall} commandCall The command call that resulted in an error.
+   */
+  onError(error, commandCall) {
+    this.client.emit('command error', { error, call: commandCall });
+  }
 
   listen() {}
 }
 
 /*
 class Command {
-  constructor(
-    client,
-    {
-      prefix = '>>',
-      superUser = '',
-      showCommandNotFoundMessage = false,
-      directMessageCommands = 'ignore',
-      dmHelp = true,
-      typescript = false,
-    },
-    cmdDir
-  ) {
-    this._client = client;
-    this._config = {
-      prefix,
-      superUser,
-      showCommandNotFoundMessage,
-      directMessageCommands,
-      dmHelp,
-      typescript,
-    };
-    this._middleware = [];
-
-    // Error Handler
-    this._onError = (message, command, error) => {
-      console.error('[Discord] COMMAND ERROR ---');
-      console.error('Error: ' + error.message);
-      console.error('User: ' + message.author.username);
-      console.error('Command: ' + command.name);
-      console.error('Stack Trace: ');
-      console.error(error);
-      message.channel.send(
-        ':x: There was an error trying to execute that command!'
-      );
-    };
-
     // COMMANDS HANDLER
-    client.commands = new Collection();
     client.cooldowns = new Collection();
-
-    // Gets all .js files in the commands folder and its subfolders ignoring files that start with _
-    const cmdFiles = getAllFiles(cmdDir, {
-      typescript: this._config.typescript,
-    });
-
-    for (const file of cmdFiles) {
-      const command = require(file.replace(__dirname, './'));
-      client.commands.set(command.name, command);
-    }
-  }
-
-  changePrefix(newPrefix) {
-    this._config.prefix = newPrefix.trimStart();
-  }
-
-  getCommandList() {
-    return Array.from(this._client.commands.keys());
-  }
-
-  use(middleware) {
-    if (isValidMiddleware(middleware)) {
-      this._middleware.push(middleware);
-    } else {
-      throw new Error('Invalid middleware');
-    }
-  }
 
   onError(errorHandler) {
     if (!errorHandler || typeof errorHandler !== 'function') {
