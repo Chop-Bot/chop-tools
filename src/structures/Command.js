@@ -4,7 +4,7 @@ const merge = require('lodash.merge');
 const commandSchema = Joi.object()
   .keys({
     name: Joi.string()
-      .alphanum()
+      .regex(/^[a-zA-Z0-9_-]+$/, 'name')
       .min(1),
     description: Joi.string()
       .required()
