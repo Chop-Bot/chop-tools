@@ -55,7 +55,6 @@ class Configuration {
     if (packagePath) {
       try {
         const pkg = module.require(packagePath);
-        console.log(typeof pkg.chop, pkg.chop);
         return isObject(pkg.chop);
       } catch (e) {
         return false;
@@ -85,9 +84,7 @@ class Configuration {
     const configPath = findUp('chop.config.js');
     if (configPath) {
       try {
-        console.log(configPath);
         const config = module.require(configPath);
-        console.log(typeof config, config);
         return isObject(config);
       } catch (e) {
         return false;
@@ -118,7 +115,6 @@ class Configuration {
     if (configPath) {
       try {
         const config = module.require(configPath);
-        console.log(typeof config, config);
         return isObject(config);
       } catch (e) {
         return false;

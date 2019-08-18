@@ -50,7 +50,6 @@ class Schedule {
     }
     task.job = nodeSchedule.scheduleJob(ocurrence, () => task.run());
     this.tasks.set(task.name, task);
-    console.log('Task created! Task store:', this.tasks);
   }
 }
 
