@@ -43,7 +43,7 @@ class FileLoader {
       try {
         // eslint-disable-next-line global-require
         const requires = files.map(t => require(t.replace(__dirname, './')));
-        requires.forEach((Imported) => {
+        requires.forEach((Imported, i) => {
           // check if Imported is a instance of ImportClass or a class that extends ImportClass
           const isInstance = Imported instanceof ImportClass;
           if (isInstance) {
@@ -54,7 +54,7 @@ class FileLoader {
             newInstance.client = this.client;
             result.push(newInstance);
           } else {
-            console.log('Else: Will not import ->', Imported);
+            console.warn('error', `Invalid ${ImportClass.name}: ${files[i]}`);
           }
         });
       } catch (err) {
@@ -77,7 +77,7 @@ class FileLoader {
         const isDirectory = fs.statSync(name).isDirectory();
         const ignore = ignoreExp.test(file);
         if (isDirectory) {
-          return [...files, ...this.readDirectory(name)];
+          return [...files, ...this.readDirectorySync(name)];
         }
         return ignore || !extExp.test(file) ? [...files] : [...files, name];
       }, [])
