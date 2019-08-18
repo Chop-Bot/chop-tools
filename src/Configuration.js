@@ -1,31 +1,57 @@
-const findUp = require('find-up');
+const findUp = require('find-up').sync;
 const merge = require('lodash.merge');
 
 const { DEFAULT_CONFIG } = require('./util/constants');
+
+/**
+ * @typedef {Object} ConfigPresence
+ * @property {Boolean} packageJson Wether a package.json config was found.
+ * @property {Boolean} js Wether a valid chop.config.js file was found.
+ * @property {Boolean} json Wether a valid chop.json file was found.
+ */
 
 function isObject(value) {
   return value && typeof value === 'object' && value.constructor === Object;
 }
 
+/**
+ * Loads configuration.
+ * @since v0.0.1
+ */
 class Configuration {
-  static async getConfig(config = null) {
+  /**
+   * Gets the defined configuration and merges it with the default ones.
+   * Priority: The config param -> chop.config.js -> chop.json -> chop property in package.json
+   * @static
+   * @param {Object} [config=null] User provided configuration in {@link ChopClient ChopClient} constructor.
+   * @returns {ClientOptions} The configuration.
+   * @memberof Configuration
+   */
+  static getConfig(config = null) {
+    let merged = merge({}, DEFAULT_CONFIG);
     if (isObject(config)) {
-      return Configuration.mergeConfigs(DEFAULT_CONFIG, config);
+      merged = merge(merged, config);
     }
-    if (await Configuration.hasChopJsConfig()) {
-      return Configuration.mergeConfigs(DEFAULT_CONFIG, await Configuration.getChopJsConfig());
+    if (this.hasChopJsConfig()) {
+      return merge(merged, this.getChopJsConfig());
     }
-    if (await Configuration.hasChopJsonConfig()) {
-      return Configuration.mergeConfigs(DEFAULT_CONFIG, await Configuration.getChopJsonConfig());
+    if (this.hasChopJsonConfig()) {
+      return merge(merged, this.getChopJsonConfig());
     }
-    if (await Configuration.hasPackageJsonConfig()) {
-      return Configuration.mergeConfigs(DEFAULT_CONFIG, await Configuration.getPackageJsonConfig());
+    if (this.hasPackageJsonConfig()) {
+      return merge(merged, this.getPackageJsonConfig());
     }
-    throw new Error('Could not find the configuration');
+    return merged;
   }
 
-  static async hasPackageJsonConfig() {
-    const packagePath = await findUp('package.json');
+  /**
+   * Looks for a chop property in the nearest package.json
+   * @static
+   * @returns {Boolean}
+   * @memberof Configuration
+   */
+  static hasPackageJsonConfig() {
+    const packagePath = findUp('package.json');
     if (packagePath) {
       try {
         const pkg = module.require(packagePath);
@@ -38,13 +64,25 @@ class Configuration {
     return false;
   }
 
-  static async getPackageJsonConfig() {
-    const packagePath = await findUp('package.json');
+  /**
+   * Gets the value of the chop property in the nearest package.json
+   * @static
+   * @returns {Object}
+   * @memberof Configuration
+   */
+  static getPackageJsonConfig() {
+    const packagePath = findUp('package.json');
     return module.require(packagePath).chop;
   }
 
-  static async hasChopJsConfig() {
-    const configPath = await findUp('chop.config.js');
+  /**
+   * Looks for a nearby chop.config.js file.
+   * @static
+   * @returns {Boolean}
+   * @memberof Configuration
+   */
+  static hasChopJsConfig() {
+    const configPath = findUp('chop.config.js');
     if (configPath) {
       try {
         console.log(configPath);
@@ -58,13 +96,25 @@ class Configuration {
     return false;
   }
 
-  static async getChopJsConfig() {
-    const configPath = await findUp('chop.config.js');
+  /**
+   * Gets the module.exports value of the nearest chop.config.js file.
+   * @static
+   * @returns {Object}
+   * @memberof Configuration
+   */
+  static getChopJsConfig() {
+    const configPath = findUp('chop.config.js');
     return module.require(configPath);
   }
 
-  static async hasChopJsonConfig() {
-    const configPath = await findUp('chop.json');
+  /**
+   * Looks for a nearby chop.json file.
+   * @static
+   * @returns {Boolean}
+   * @memberof Configuration
+   */
+  static hasChopJsonConfig() {
+    const configPath = findUp('chop.json');
     if (configPath) {
       try {
         const config = module.require(configPath);
@@ -77,34 +127,29 @@ class Configuration {
     return false;
   }
 
-  static async getChopJsonConfig() {
-    const configPath = await findUp('chop.json');
+  /**
+   * Gets the value from the nearest chop.json file.
+   * @static
+   * @returns {Object}
+   * @memberof Configuration
+   */
+  static getChopJsonConfig() {
+    const configPath = findUp('chop.json');
     return module.require(configPath);
   }
 
-  static async hasConfigs() {
+  /**
+   * Checks for configuration files.
+   * @static
+   * @returns {ConfigPresence}
+   * @memberof Configuration
+   */
+  static hasConfigs() {
     return {
-      packageJson: await Configuration.hasPackageJsonConfig(),
-      js: await Configuration.hasChopJsConfig(),
-      json: await Configuration.hasChopJsonConfig(),
+      packageJson: Configuration.hasPackageJsonConfig(),
+      js: Configuration.hasChopJsConfig(),
+      json: Configuration.hasChopJsonConfig(),
     };
-  }
-
-  static async getConfigFromPath(configPath) {
-    if (configPath) {
-      try {
-        const config = module.require(configPath);
-        if (!isObject(config)) throw new Error('Chop Config must be an object');
-        return Configuration.mergeConfigs(DEFAULT_CONFIG, config);
-      } catch (e) {
-        throw new Error(`Could not load config at path ${configPath}`);
-      }
-    }
-    throw new Error('You must provide a path to the config file');
-  }
-
-  static mergeConfigs(config1, config2) {
-    return merge({}, config1, config2);
   }
 }
 

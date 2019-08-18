@@ -1,14 +1,13 @@
 const Discord = require('discord.js');
 
 const FileLoader = require('./FileLoader');
-const ChopEvents = require('./util/ChopEvents');
-const Schedule = require('./structures/Schedule');
-const CommandStore = require('./stores/CommandStore');
-const Command = require('./structures/Command');
+const Configuration = require('./Configuration');
 const Task = require('./structures/Task');
+const Schedule = require('./structures/Schedule');
+const Command = require('./structures/Command');
+const CommandStore = require('./stores/CommandStore');
+const CommandRunner = require('./command/CommandRunner');
 const Util = require('./util/Util');
-
-const DEFAULTS = { root: require.main.path };
 
 /**
  * The discord.js Client class.
@@ -17,32 +16,30 @@ const DEFAULTS = { root: require.main.path };
  */
 
 /**
+ * The discord.js Client class.
+ * @external ClientOptions
+ * @see {@link https://discord.js.org/#/docs/main/master/class/ClientOptions|ClientOptions}
+ */
+
+/**
  * The starting point of any Chop bot.
  * @namespace
  * @extends {external:Client}
+ * @tutorial Getting Started
+ * @since v0.0.1
  */
 class ChopClient extends Discord.Client {
   /**
-   * @param {String} root Path to the directory Chop will look for commands, tasks, etc...
-   * If not set, Chop will use the directory where the client was instantiated.
-   * @param  {...any} args Arguments to pass to Discord.Client
+   * @param {external:ClientOptions} options Options for the client.
    * @example
-   * const client = new ChopClient('TOKEN');
+   * const client = new ChopClient();
    */
   constructor(options = {}) {
-    // eslint-disable-next-line no-param-reassign
-    options = { ...DEFAULTS, ...options };
-    super(options);
-    this.root = options.root;
+    if (!Util.isObject(options)) throw new Error('Options must be an object.');
+    const mergedConfig = Configuration.getConfig(options);
+    super(mergedConfig);
 
-    /**
-     * Instance of ChopEvents that will manage the Chop events.
-     * @name ChopClient#events
-     * @type {ChopEvents}
-     */
-    this.events = new ChopEvents();
-
-    const fileLoader = new FileLoader(this, this.root);
+    const fileLoader = new FileLoader(this, this.options.root);
 
     const commands = fileLoader.loadDirectorySync({
       dir: 'commands',
@@ -54,7 +51,7 @@ class ChopClient extends Discord.Client {
      * @name ChopClient#commands
      * @type {CommandStore}
      */
-    this.commands = new CommandStore(this, Util.mapByName(commands));
+    this.commands = new CommandStore(this, commands);
     this.emit('debug', 'Loaded', this.commands.size, 'commands.');
 
     const tasks = fileLoader.loadDirectorySync({
@@ -67,12 +64,27 @@ class ChopClient extends Discord.Client {
      * @name ChopClient#schedule
      * @type {Schedule}
      */
-    this.schedule = new Schedule(this, Util.mapByName(tasks));
+    this.schedule = new Schedule(this, tasks);
     this.emit('debug', 'Loaded', this.schedule.tasks.size, 'tasks.');
+
+    this.runner = new CommandRunner(this, this.options);
+
+    /**
+     * Registers a new middleware.
+     * @param {Function} middleware
+     * @see {@tutorial Command Middleware}
+     */
+    this.use = (...args) => this.runner.use(...args);
   }
 
   async login(token) {
+    this.runner.listen();
     return super.login(token);
+  }
+
+  async destroy(...args) {
+    this.schedule.tasks.forEach(t => t.job.cancel());
+    return super.destroy(...args);
   }
 }
 

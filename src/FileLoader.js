@@ -10,6 +10,7 @@ const { join } = require('path');
 /**
  * FileLoader loads files from folders that export an instance or extension of the given class.
  * @namespace
+ * @since v0.0.1
  */
 class FileLoader {
   constructor(client, root) {
@@ -27,12 +28,12 @@ class FileLoader {
      * @type {String}
      * @readonly
      */
-    Object.defineProperty(this, 'root', { value: root });
+    Object.defineProperty(this, 'root', { value: root || require.main.path });
   }
 
   loadDirectorySync({ dir, importClass: ImportClass, makeDir = true }) {
     const result = [];
-    const dirPath = join(this.root || require.main.path, dir);
+    const dirPath = join(this.root, dir);
     try {
       if (makeDir && !fs.existsSync(dirPath)) {
         fs.mkdirSync(dirPath);
@@ -46,9 +47,14 @@ class FileLoader {
           // check if Imported is a instance of ImportClass or a class that extends ImportClass
           const isInstance = Imported instanceof ImportClass;
           if (isInstance) {
+            Imported.client = this.client;
             result.push(Imported);
           } else if (!isInstance && Imported.prototype instanceof ImportClass) {
-            result.push(new Imported());
+            const newInstance = new Imported();
+            newInstance.client = this.client;
+            result.push(newInstance);
+          } else {
+            console.log('Else: Will not import ->', Imported);
           }
         });
       } catch (err) {
@@ -84,7 +90,6 @@ class FileLoader {
     const dirContents = await readDir(dir);
     return dirContents
       .reduce(async (files, file) => {
-        // eslint-disable-next-line no-param-reassign
         files = await files;
         const name = join(dir, file);
         const isDirectory = await stat(name).isDirectory();
@@ -99,7 +104,7 @@ class FileLoader {
 
   async loadDirectory({ dir, importClass: ImportClass, makeDir = true }) {
     const result = [];
-    const dirPath = join(this.root || require.main.path, dir);
+    const dirPath = join(this.root, dir);
     try {
       if (makeDir && (await !exists(dirPath))) {
         await mkdir(dirPath);

@@ -4,6 +4,7 @@ const { join } = require('path');
 const jsdoc = require('jsdoc-api');
 const semver = require('semver');
 const rimraf = require('rimraf');
+
 const { version } = require('./package.json');
 
 const dir = join(__dirname, 'docs');
@@ -40,7 +41,7 @@ console.log(`The current version, ${version} is${isLatest ? '' : ' not'} the lat
 
 if (isLatest) {
   console.log('Overwriting docs for latest at', getOptions(true).destination);
-  rimraf.sync(join(dir, 'latest/**'));
+  // rimraf.sync(join(dir, 'latest/**'));
   jsdoc.renderSync(getOptions(true));
 }
 

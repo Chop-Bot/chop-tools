@@ -11,7 +11,7 @@ class Schedule {
   /**
    * Manages tasks
    * @param {ChopClient} client The client that instantied this schedule
-   * @param {Map<String, Task>} tasks The tasks to schedule mapped by their name
+   * @param {Collection<String, Task>} tasks The tasks to schedule mapped by their name
    */
   constructor(client, tasks) {
     if (!client) {
@@ -23,10 +23,6 @@ class Schedule {
     this.client = client;
     this.tasks = new TaskStore(client, tasks);
     this.tasks.forEach(t => this.create(t));
-    this.client.events.on('kill', () => {
-      this.client.events.emit('info', '[Schedule] Clearing task jobs.');
-      this.tasks.forEach(t => t.job.cancel());
-    });
   }
 
   create(newTask) {
@@ -54,6 +50,7 @@ class Schedule {
     }
     task.job = nodeSchedule.scheduleJob(ocurrence, () => task.run());
     this.tasks.set(task.name, task);
+    console.log('Task created! Task store:', this.tasks);
   }
 }
 

@@ -1,198 +1,180 @@
-const Middleware = require('./util/Middleware');
-
-/**
- * @typedef CommandCall
- * @param {String} caller The id of the user that made the call.
- * @param {String} commandName The command name.
- * @param {String[]} args The arguments the command was called with.
- * @param {Date} time When the command was called.
- */
+const CommandCall = require('../structures/CommandCall');
+const CooldownManager = require('./CooldownManager');
+const CommandError = require('./CommandError');
+const Middleware = require('./Middleware');
+const MiddlewareError = require('./MiddlewareError');
+const Util = require('../util/Util');
 
 /**
  * Runs commands in Chop.
+ * @since v0.0.1
  */
 class CommandRunner extends Middleware {
   /**
    * @param {ChopClient} client The client that instantiated this class.
-   * @param {ClientOptions} options The configuration object. TODO: Make a new typedef for this
+   * @param {ChopOptions} options The configuration object.
    */
   constructor(client, options) {
     super();
-    /**
-     * The client that instantiated this class.
-     * @type {ChopClient}
-     * @name CommandRunner#client
-     */
     this.client = client;
+    this.options = options;
 
     /**
-     * The options for the CommandRunner.
-     * @type {ClientOptions}
-     * @name CommandRunner#options
+     * The cooldown manager for this runner.
+     * @type {CooldownManager}
+     * @name CommandRunner#cooldowns
      */
-    this.options = options;
+    this.cooldowns = new CooldownManager(client);
   }
 
-  // Returns a CommandCall object or null
-  parseMessage() {}
+  /**
+   * Makes the bot start listening for commands.
+   * @memberof CommandRunner
+   */
+  listen() {
+    this.client.on('message', (message) => {
+      const content = message.content.trim();
+      const isPrefixed = content.replace(/\s\s+/g, ' ').startsWith(this.options.prefix);
+      if (!isPrefixed || (message.author.bot && !this.options.allowBots)) return;
+
+      const isDM = message.channel.type !== 'text';
+      if (isDM && this.options.dmCommands === 'ignore') return;
+      if (isDM && this.options.dmCommands === 'error') {
+        this.sendMessage(message.channel, this.options.messages.directMessageError);
+        return;
+      }
+
+      const call = new CommandCall(this.client, message);
+
+      if (!call.commandExists) {
+        if (this.options.showNotFoundMessage) {
+          this.sendMessage(message.channel, this.options.messages.commandNotFound);
+          if (call.bestMatch) {
+            message.channel.send(Util.format(this.options.messages.bestMatch, call.bestMatch));
+          }
+        }
+        return;
+      }
+
+      if (call.isDM && !call.command.runIn.includes('dm')) {
+        this.sendMessage(
+          message.channel,
+          Util.format(this.options.messages.directMessageErrorSpecific, call.commandName),
+        );
+        return;
+      }
+
+      try {
+        this.go(call, (commandCall) => {
+          this.run(message, commandCall);
+        });
+      } catch (e) {
+        const error = new MiddlewareError('An error happened in a middleware.', call);
+        error.stack += `\nORIGINAL STACK:\n${e.stack}`;
+        this.client.emit('error', error);
+      }
+    });
+  }
+
+  /**
+   * Runs a command call.
+   * @param {external:Message} message The discord message for this command.
+   * @param {CommandCall} call
+   * @memberof CommandRunner
+   */
+  run(message, call) {
+    if (call.command.hidden && !call.isSuperUser) {
+      if (this.options.showNotFoundMessage) {
+        this.sendMessage(message.channel, this.options.messages.commandNotFound);
+        if (this.options.findBestMatch) {
+          this.sendMessage(
+            message.channel,
+            Util.format(this.options.messages.bestMatch, call.bestMatch),
+          );
+        }
+      }
+      return;
+    }
+
+    if (call.command.admin && !call.isAdmin) {
+      this.sendMessage(
+        message.channel,
+        Util.format(this.options.messages.missingPermissions, call.commandName),
+      );
+      return;
+    }
+
+    if (!call.hasEnoughArgs) {
+      // TODO: Implement argument prompting
+      this.sendMessage(
+        message.channel,
+        Util.format(this.options.messages.missingArgument, call.missingArg),
+      );
+      this.sendMessage(
+        message.channel,
+        Util.format(
+          this.options.messages.usageMessage,
+          this.options.prefix,
+          call.command.name,
+          call.command.usage || call.command.args.reduce((acc, cur) => `${acc}<${cur}> `, ''),
+        ),
+      );
+      return;
+    }
+
+    const cooldownLeft = this.cooldowns.getTimeLeft(call.commandName, call.caller);
+
+    if (cooldownLeft > 0) {
+      this.sendMessage(
+        message.channel,
+        Util.format(
+          this.options.messages.cooldown,
+          Util.secondsToTime(cooldownLeft),
+          call.commandName,
+        ),
+      );
+      return;
+    }
+
+    this.cooldowns.updateTimeLeft(call.commandName, call.caller);
+
+    if (call.command.delete) {
+      try {
+        message.delete({ reason: `Executed the ${call.commandName} command.` });
+      } catch (e) {
+        this.client.emit('warn', 'Chop: Could not delete command call message.');
+      }
+    }
+
+    try {
+      call.command.run(message, call.args, call);
+    } catch (err) {
+      this.emitError(new CommandError(call.command, call, err));
+    }
+  }
+
+  /**
+   * Tries to send a message. Emit warning if can't.
+   * @param {Object} channel The channel to send the message to.
+   * @param {string} content The message to be send.
+   * @memberof CommandRunner
+   */
+  sendMessage(channel, content) {
+    try {
+      channel.send(content);
+    } catch (e) {
+      this.client.emit('warn', `Chop -> Could not send message: ${content}`);
+    }
+  }
 
   /**
    * Handles command call errors.
-   * @param {CommandCall} commandCall The command call that resulted in an error.
+   * @param {CommandError} commandError The command error object.
+   * @memberof CommandRunner
    */
-  onError(error, commandCall) {
-    this.client.emit('command error', { error, call: commandCall });
-  }
-
-  listen() {}
-}
-
-/*
-class Command {
-    // COMMANDS HANDLER
-    client.cooldowns = new Collection();
-
-  onError(errorHandler) {
-    if (!errorHandler || typeof errorHandler !== 'function') {
-      throw new Error('errorHandler must be a function');
-    }
-    this._onError = errorHandler;
-  }
-
-  ListenForCommands(cb) {
-    const client = this._client;
-    const { cooldowns } = this._client;
-
-    client.on('message', message => {
-      const {
-        prefix,
-        superUser,
-        showCommandNotFoundMessage,
-        directMessageCommands,
-      } = this._config;
-
-      // If message sent by bot or doesn't have prefix, return
-      if (!message.content.startsWith(prefix) || message.author.bot) {
-        return;
-      }
-
-      // Isolate command name and arguments
-      const commandRequest = { ...parseCommand(message.content, prefix) };
-
-      // Use all middleware registered
-      for (const middleware of this._middleware) {
-        try {
-          if (!middleware(commandRequest, message)) return;
-        } catch (e) {
-          console.error('An error ocurred in a middleware!');
-          return;
-        }
-      }
-
-      const { args, commandName, commandContent } = commandRequest;
-
-      const command =
-        client.commands.get(commandName) ||
-        client.commands.find(
-          cmd => cmd.aliases && cmd.aliases.includes(commandName)
-        );
-
-      if (!command) {
-        if (commandName === 'help') {
-          helpCommand(message, args, this._config.prefix, this._config.dmHelp);
-          return;
-        }
-        if (showCommandNotFoundMessage) {
-          message.channel.send('I could not find that command.');
-        }
-        return;
-      }
-
-      // superUser can be a string or array
-      const isSuperUser = superUser.includes(message.author.id);
-
-      // If the command is hidden and user is not a super user return
-      if (command.hidden && !isSuperUser) {
-        if (showCommandNotFoundMessage) {
-          message.channel.send('I could not find that command.');
-        }
-        return;
-      }
-
-      // TODO: message.member could be null if the user uses a command just after joining the server
-      const hasAdminPermission =
-        isSuperUser ||
-        message.member.hasPermission('ADMINISTRATOR', false, true, true);
-
-      if (command.admin && !hasAdminPermission) {
-        if (showCommandNotFoundMessage) {
-          message.channel.send('I could not find that command.');
-        }
-        return;
-      }
-
-      // Command requires arguments
-      if (command.args && !args.length) {
-        let reply = `You didn't provide arguments, ${message.author}!`;
-        if (command.usage) {
-          reply += `\nThe proper usage would be: \`${prefix}${command.name} ${
-            command.usage
-          }\``;
-        }
-        return message.channel.send(reply);
-      }
-
-      if (message.channel.type !== 'text') {
-        switch (directMessageCommands) {
-          case 'error':
-            return message.reply(`I can't execute commands inside DMs!`);
-          case 'allow':
-            if (command.guildOnly) {
-              return message.reply(
-                `I can't execute \`${command.name}\` inside DMs!`
-              );
-            }
-            break;
-          case 'ignore':
-          default:
-            return;
-        }
-      }
-
-      if (!cooldowns.has(command.name)) {
-        cooldowns.set(command.name, new Collection());
-      }
-
-      const cd = isInCooldown(command, cooldowns, message.author.id);
-      if (cd) {
-        message.channel.send(
-          `Please wait ${cd} more second(s) before using the \`${
-            command.name
-          }\` command.`
-        );
-        return;
-      }
-
-      if (command.delete === true) message.delete();
-
-      try {
-        command.execute(message, args, commandContent, this._config);
-      } catch (error) {
-        this._onError(message, command, error);
-      }
-    });
-
-    if (cb) {
-      if (typeof cb === 'function') {
-        cb(client.commands);
-      } else {
-        console.warn(
-          'Type of callback must be function. Instead received: ' + typeof cb
-        );
-      }
-    }
+  emitError(commandError) {
+    this.client.emit('error', commandError);
   }
 }
 
-module.exports = Command;
-*/
+module.exports = CommandRunner;

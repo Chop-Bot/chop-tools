@@ -10,7 +10,13 @@ class TaskStore extends Collection {
     if (!client || !(client instanceof Client || client.prototype instanceof Client)) {
       throw new Error('CommandStore requires a client');
     }
-    super(tasks);
+
+    const mappedTasks = tasks
+      .map(t => [t.name.toLowerCase(), Object.assign(t, { name: t.name.toLowerCase() })])
+      .map(t => Object.defineProperty(t, 'client', { value: client }));
+
+    super(mappedTasks);
+
     this.client = client;
   }
 }

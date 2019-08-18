@@ -1,64 +1,68 @@
-const V = require('@hapi/joi');
+const Joi = require('@hapi/joi');
+const merge = require('lodash.merge');
 
-// TODO: Turn this mess into a joi schema
-const VALIDATION = {
-  name: V.string()
-    .required()
-    .min(1)
-    .alphanum()
-    .label('Name'),
-  description: V.string()
-    .required()
-    .label('Description'),
-  usage: V.string()
-    .optional()
-    .label('Usage'),
-  help: V.string()
-    .optional()
-    .label('Help'),
-  aliases: V.array()
-    .min(0)
-    .items(V.string())
-    .label('Aliases'),
-  permissions: V.array()
-    .min(0)
-    .items(V.string())
-    .label('Permissions'),
-  cooldown: V.number()
-    .required()
-    .min(0)
-    .label('Cooldown'),
-  category: V.string()
-    .optional()
-    .label('Category'),
-  runIn: V.array()
-    .items(V.allow('text', 'dm'))
-    .label('RunIn'),
-  hidden: V.bool().label('Hidden'),
-  args: V.array()
-    .min(0)
-    .items(V.string())
-    .label('Args'),
-  delete: V.bool().label('Delete'),
-  run: V.func()
-    .required()
-    .label('Run'),
-};
+const commandSchema = Joi.object()
+  .keys({
+    name: Joi.string()
+      .alphanum()
+      .min(1),
+    description: Joi.string()
+      .required()
+      .min(1),
+    usage: Joi.string().min(1),
+    help: Joi.string().min(1),
+    category: Joi.string()
+      .alphanum()
+      .min(1),
+    aliases: Joi.array().items(
+      Joi.string()
+        .alphanum()
+        .min(1),
+    ),
+    permissions: Joi.array().items(Joi.number()),
+    cooldown: Joi.number().min(0),
+    hidden: Joi.bool(),
+    admin: Joi.bool(),
+    delete: Joi.bool(),
+    runIn: Joi.array()
+      .min(1)
+      .items(Joi.string().valid('text', 'dm')),
+    args: Joi.array().items(Joi.string()),
+    run: Joi.func(),
+  })
+  .requiredKeys('', 'name', 'description', 'runIn');
 
-const validateOrThrow = (value, validation) => {
-  const result = validation.validate(value);
-  if (result.error) {
-    throw result.error;
-  }
-  return result.value;
-};
+/**
+ * @typedef {Function} CommandExecutor
+ * @param {external:Message} message The message that called this command.
+ * @param {string[]} args The args this command was called with.
+ * @param {CommandCall} call The command call object.
+ */
 
 /**
  * Represents a command.
- * @namespace
+ * @property {string} name The command name.
+ * @property {string} description The command description.
+ * @property {string} usage How to use the command.
+ * @property {string} help The text displayed when the user uses help [command name].
+ * @property {string} category The category to which this command belongs.
+ * @property {string[]} aliases Alternative names for this command.
+ * @property {number[]} [permissions=[]] The permissions for this command.
+ * @property {number} [cooldown=3] The cooldown in seconds for this command.
+ * @property {string[]} [runIn=['text']] Where to allow this command to be used. Options: 'text' and 'dm'
+ * @property {boolean} [hidden=false] Only users set in the owners config will be able to use this command.
+ * @property {string[]} [args=[]] The commands this command takes. (Mostly for formatting the error message.)
+ * @property {boolean} [delete=false] Wether the message that called this command should be deleted. Note: bot needs the appropriate permissions.
+ * @property {CommandExecutor} run The function that will be executed when the command is called.
+ * @tutorial 02 - Commands
+ * @since v0.0.1
  */
 class Command {
-  constructor(options) {
+  /**
+   * @param {Object} options={} The options for this command.
+   * @memberof Command
+   */
+  constructor(options = {}) {
     const defaults = {
       aliases: [],
       permissions: [],
@@ -67,232 +71,12 @@ class Command {
       hidden: false,
       args: [],
       delete: false,
-      run: () => {},
     };
-    const fields = { ...defaults, ...options };
-    // eslint-disable-next-line no-restricted-syntax
-    for (const field in fields) {
-      if (VALIDATION[field]) {
-        this[`_${field}`] = validateOrThrow(fields[field], VALIDATION[field]);
-      } else {
-        throw new Error(`Field ${field} is not a valid command field.`);
-      }
-    }
-  }
-
-  /**
-   * The command name.
-   * @name Command#name
-   * @type {String}
-   */
-  set name(n) {
-    this._name = validateOrThrow(n, VALIDATION.name);
-  }
-
-  get name() {
-    return this._name;
-  }
-
-  setName(n) {
-    this._name = validateOrThrow(n, VALIDATION.name);
-    return this;
-  }
-
-  /**
-   * The command description.
-   * @name Command#description
-   * @type {String}
-   */
-  set description(n) {
-    this._description = validateOrThrow(n, VALIDATION.description);
-  }
-
-  get description() {
-    return this._description;
-  }
-
-  setDescription(n) {
-    this._description = validateOrThrow(n, VALIDATION.description);
-    return this;
-  }
-
-  /**
-   * How to use the command.
-   * @name Command#usage
-   * @type {String}
-   */
-  set usage(n) {
-    this._usage = validateOrThrow(n, VALIDATION.usage);
-  }
-
-  get usage() {
-    return this._usage;
-  }
-
-  setUsage(n) {
-    this._usage = validateOrThrow(n, VALIDATION.usage);
-    return this;
-  }
-
-  /**
-   * The text displayed when the user uses help [command name].
-   * @name Command#help
-   * @type {String}
-   */
-  set help(n) {
-    this._help = validateOrThrow(n, VALIDATION.help);
-  }
-
-  get help() {
-    return this._help;
-  }
-
-  setHelp(n) {
-    this._help = validateOrThrow(n, VALIDATION.help);
-    return this;
-  }
-
-  /**
-   * Alternative names for this command.
-   * @name Command#aliases
-   * @type {String[]}
-   */
-  set aliases(n) {
-    this._aliases = validateOrThrow(n, VALIDATION.aliases);
-  }
-
-  get aliases() {
-    return this._aliases;
-  }
-
-  addAliases(n) {
-    this._aliases = [...this.aliases, ...validateOrThrow(n, VALIDATION.aliases)];
-    return this;
-  }
-
-  removeAlias(n) {
-    this._aliases = this._aliases.filter(a => !n.includes(a));
-    return this;
-  }
-
-  /**
-   * The permissions for this command.
-   * @name Command#permissions
-   * @type {external:PermissionResolvable[]}
-   * @see Discord.Permissions.FLAGS
-   */
-  set permissions(n) {
-    this._permissions = validateOrThrow(n, VALIDATION.permissions);
-  }
-
-  get permissions() {
-    return this._permissions;
-  }
-
-  /**
-   * Command permissions
-   * @param {external:PermissionResolvable} n
-   * @see Discord.Permissions.FLAGS
-   */
-  setPermissions(n) {
-    this._permissions = validateOrThrow(n, VALIDATION.permissions);
-    return this;
-  }
-
-  /** 
-   * Command cooldown in seconds.
-   * 
-   */
-  set cooldown(n) {
-    this._cooldown = validateOrThrow(n, VALIDATION.cooldown);
-  }
-
-  get cooldown() {
-    return this._cooldown;
-  }
-
-  setCooldown(n) {
-    this._cooldown = validateOrThrow(n, VALIDATION.cooldown);
-    return this;
-  }
-
-  set category(n) {
-    this._category = validateOrThrow(n, VALIDATION.category);
-  }
-
-  get category() {
-    return this._category;
-  }
-
-  setCategory(n) {
-    this._category = validateOrThrow(n, VALIDATION.category);
-    return this;
-  }
-
-  set runIn(n) {
-    this._runIn = validateOrThrow(n, VALIDATION.runIn);
-  }
-
-  get runIn() {
-    return this._runIn;
-  }
-
-  setRunIn(n) {
-    this._runIn = validateOrThrow(n, VALIDATION.runIn);
-    return this;
-  }
-
-  set hidden(n) {
-    this._hidden = validateOrThrow(n, VALIDATION.hidden);
-  }
-
-  get hidden() {
-    return this._hidden;
-  }
-
-  setHidden(n) {
-    this._hidden = validateOrThrow(n, VALIDATION.hidden);
-    return this;
-  }
-
-  set args(n) {
-    this._args = validateOrThrow(n, VALIDATION.args);
-  }
-
-  get args() {
-    return this._args;
-  }
-
-  setArgs(n) {
-    this._args = validateOrThrow(n, VALIDATION.args);
-    return this;
-  }
-
-  set delete(n) {
-    this._delete = validateOrThrow(n, VALIDATION.delete);
-  }
-
-  get delete() {
-    return this._delete;
-  }
-
-  setDelete(n) {
-    this._delete = validateOrThrow(n, VALIDATION.delete);
-    return this;
-  }
-
-  set run(n) {
-    throw new Error('Setting command executor directly is not allowed.');
-  }
-
-  setRun(n) {
-    this._run = validateOrThrow(n, VALIDATION.run);
-    return this;
-  }
-
-  setExecutor(n) {
-    this._run = validateOrThrow(n, VALIDATION.run);
-    return this;
+    const merged = merge(defaults, options);
+    commandSchema.validate(merged, (err, value) => {
+      if (err) throw err;
+      Object.assign(this, value);
+    });
   }
 }
 
