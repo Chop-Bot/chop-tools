@@ -2,7 +2,6 @@ const { findBestMatch } = require('string-similarity');
 
 /**
  * Represents a command call.
- * @readonly
  * @property {string} caller The id of the user that made the call.
  * @property {string} callerTag The tag of the user that made the call.
  * @property {Command} command The command for this call.
@@ -46,7 +45,6 @@ class CommandCall {
     this.bestMatch = null;
 
     this.parseAndSave(message);
-    Object.freeze(this);
   }
 
   /**
