@@ -6,8 +6,7 @@
   "scripts": {
     "test": "jest",
     "docs": "./node_modules/.bin/jsdoc -c ./gendocs.js --verbose",
-    "docs-push": "git add ./docs/** && git commit -m \"📝 Generated docs\" && git push",
-    "docs-publish": "gh-pages -d ./docs -b docs -m \"📝 Generated docs\""
+    "docs-push": "git add ./docs/** && git commit -m \"📝 Generated docs\" && git push"
   },
   "keywords": [
     "discord.js",
@@ -42,7 +41,6 @@
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-plugin-import": "^2.18.2",
-    "gh-pages": "^2.1.1",
     "jest": "^24.8.0",
     "jsdoc": "^3.5.0",
     "tui-jsdoc-template": "^1.2.2"
