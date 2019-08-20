@@ -33,7 +33,7 @@ class CommandRunner extends Middleware {
    */
   listen() {
     this.client.on('message', (message) => {
-      const content = message.content.trim();
+      const content = message.content.trim().toLowerCase();
       const isPrefixed = content.replace(/\s\s+/g, ' ').startsWith(this.options.prefix);
       if (!isPrefixed || (message.author.bot && !this.options.allowBots)) return;
 
