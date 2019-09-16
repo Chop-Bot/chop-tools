@@ -1,4 +1,4 @@
-const { Collection } = require('discord.js');
+const Collection = require('@discordjs/collection');
 // const Command = require('../structures/Command');
 
 /**

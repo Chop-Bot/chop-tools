@@ -1,4 +1,5 @@
-const { Collection, Client } = require('discord.js');
+const { Client } = require('discord.js');
+const Collection = require('@discordjs/collection');
 // const Task = require('../structures/Task');
 
 /**
