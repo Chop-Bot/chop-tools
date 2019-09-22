@@ -10,6 +10,7 @@ const commandSchema = Joi.object()
       .required()
       .min(1),
     usage: Joi.string().min(1),
+    example: Joi.string().min(1),
     help: Joi.string().min(1),
     category: Joi.string()
       .alphanum()
@@ -44,6 +45,7 @@ const commandSchema = Joi.object()
  * @property {string} name The command name.
  * @property {string} description The command description.
  * @property {string} usage How to use the command.
+ * @property {string} example An example of the command being used.
  * @property {string} help The text displayed when the user uses help [command name].
  * @property {string} category The category to which this command belongs.
  * @property {string[]} aliases Alternative names for this command.
