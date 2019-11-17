@@ -18,7 +18,7 @@ const Util = require('./util/Util');
 /**
  * The discord.js Client class.
  * @external ClientOptions
- * @see {@link https://discord.js.org/#/docs/main/master/class/ClientOptions|ClientOptions}
+ * @see {@link https://discord.js.org/#/docs/main/master/typedef/ClientOptions|ClientOptions}
  */
 
 /**
