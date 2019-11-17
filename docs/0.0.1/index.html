@@ -69,13 +69,66 @@
 
     <section>
         <article class="readme"><h1>Chop Tools</h1>
-<p>Welcome to Chop Tools. A discord bot framework where the wheel is being painstakingly being rewritten.</p>
+<p>Welcome to Chop Tools. A discord bot framework based on <a href="https://github.com/discordjs/discord.js">discord.js</a> with commands and tasks working out of the box.</p>
 <h2>Features</h2>
 <ul>
-<li>Commands (WIP)</li>
-<li>Tasks (WIP)</li>
-<li>Prompter (WIP)</li>
-</ul></article>
+<li>Commands
+<ul>
+<li>Easy to use.</li>
+<li>Suggestion system if command not found.</li>
+<li>No configuration needed.</li>
+</ul>
+</li>
+<li>Tasks
+<ul>
+<li>Run code on scheduled intervals.</li>
+<li>Run code on specific dates.</li>
+</ul>
+</li>
+</ul>
+<h2>Planned Features</h2>
+<ul>
+<li>Prompter - Prompt for a user response using reactions or messages.</li>
+</ul>
+<h1>Bot Example</h1>
+<pre class="prettyprint source lang-javascript"><code>const ChopTools = require('chop-tools');
+
+const client = new ChopTools.Client({ prefix: '!', owners: ['YOUR ID HERE'] });
+
+client.on('ready', () => {
+  console.log(`It's discord time! [${client.user.tag}]`);
+})
+
+client.login('YOUR TOKEN GOES HERE').then(() => {
+  console.log('Login successful!');
+});
+</code></pre>
+<h1>Creating Commands</h1>
+<p>At the entry point of your application create a directory named <code>commands</code>.<br>
+All files ending with .js in this <code>commands</code> directory will be loaded as commands.</p>
+<h2>Command Example</h2>
+<pre class="prettyprint source lang-javascript"><code>const { Command } = require('chop-tools');
+
+module.exports = new Command({
+  name: 'ping',
+  description: 'This is a ping command.',
+  cooldown: 3,
+  run(message, args, call) {
+    message.channel.send('Pong!');
+  }
+});
+</code></pre>
+<p><strong>Notes:</strong></p>
+<ul>
+<li>You can read more about the command properties on the API docs: <a href="https://joaquimnet.github.io/chop-tools/latest/Command.html">Command</a>.</li>
+<li>You can see the properties of the call object on the API docs: <a href="https://joaquimnet.github.io/chop-tools/latest/CommandCall.html">CommandCall</a>.</li>
+<li>You must export a new Command() with module.exports for it to be loaded.</li>
+<li>All commands in the commands directory are loaded unless the file starts with a underscore. ( _ )</li>
+<li>You <strong>can</strong> have subfolders in the commands directory.</li>
+<li>You can access the <a href="https://joaquimnet.github.io/chop-tools/latest/ChopClient.html">client</a> inside the run method by using <code>this.client</code>. (This will NOT work if <code>run</code> is a arrow function).</li>
+</ul>
+<h1>API</h1>
+<p><a href="http://joaquimnet.github.io/chop-tools/latest/">Documentation</a></p></article>
     </section>
 
 
