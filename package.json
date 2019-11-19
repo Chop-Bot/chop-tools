@@ -18,8 +18,8 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "directory": "https://github.com/joaquimnet/chop-tools.git",
-    "url": "https://github.com/joaquimnet/chop-tools"
+    "directory": "https://github.com/Chop-Bot/chop-tools.git",
+    "url": "https://github.com/Chop-Bot/chop-tools"
   },
   "dependencies": {
     "@discordjs/collection": "^0.1.2",

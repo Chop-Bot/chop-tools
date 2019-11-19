@@ -54,13 +54,13 @@ module.exports = new Command({
 
 **Notes:**
 
--   You can read more about the command properties on the API docs: [Command](https://joaquimnet.github.io/chop-tools/latest/Command.html).
--   You can see the properties of the call object on the API docs: [CommandCall](https://joaquimnet.github.io/chop-tools/latest/CommandCall.html).
+-   You can read more about the command properties on the API docs: [Command](https://chop-bot.github.io/chop-tools/latest/Command.html).
+-   You can see the properties of the call object on the API docs: [CommandCall](https://chop-bot.github.io/chop-tools/latest/CommandCall.html).
 -   You must export a new Command() with module.exports for it to be loaded.
 -   All commands in the commands directory are loaded unless the file starts with a underscore. ( \_ )
 -   You **can** have subfolders in the commands directory.
--   You can access the [client](https://joaquimnet.github.io/chop-tools/latest/ChopClient.html) inside the run method by using `this.client`. (This will NOT work if `run` is a arrow function).
+-   You can access the [client](https://chop-bot.github.io/chop-tools/latest/ChopClient.html) inside the run method by using `this.client`. (This will NOT work if `run` is a arrow function).
 
 # API
 
-[Documentation](http://joaquimnet.github.io/chop-tools/latest/)
+[Documentation](http://chop-bot.github.io/chop-tools/latest/)
