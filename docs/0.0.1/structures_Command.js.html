@@ -78,7 +78,7 @@ const commandSchema = Joi.object()
       .min(1),
     aliases: Joi.array().items(
       Joi.string()
-        .alphanum()
+        .regex(/^[a-zA-Z0-9_-]+$/, 'name')
         .min(1),
     ),
     permissions: Joi.array().items(Joi.number()),
