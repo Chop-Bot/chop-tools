@@ -1,5 +1,3 @@
-<center><img src="https://media.discordapp.net/attachments/609389438572691457/646493244192063499/Icon.png" alt="Chop Tools Logo"></img></center>
-
 # Chop Tools
 
 Welcome to Chop Tools. A discord bot framework based on [discord.js](https://github.com/discordjs/discord.js) with commands and tasks working out of the box.
