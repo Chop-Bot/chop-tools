@@ -139,11 +139,9 @@ class CommandRunner extends Middleware {
     this.cooldowns.updateTimeLeft(call.commandName, call.caller);
 
     if (call.command.delete) {
-      try {
-        message.delete({ reason: `Executed the ${call.commandName} command.` });
-      } catch (e) {
-        this.client.emit('warn', 'Chop: Could not delete command call message.');
-      }
+      message.delete({ reason: `Executed the ${call.commandName} command.` })
+        .then(() => {})
+        .catch(() => {});
     }
 
     try {
