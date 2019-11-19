@@ -27,9 +27,9 @@ class CommandCall {
     this.caller = message.author.id;
     this.callerTag = message.author.tag;
     this.isSuperUser = this.client.options.owners.includes(this.caller);
-    this.isAdmin = this.isSuperUser
-      || (message.member
-        && message.member.hasPermission('ADMINISTRATOR', { checkAdmin: true, checkOwner: true }));
+    this.isAdmin =
+      this.isSuperUser ||
+      (message.member && message.member.hasPermission('ADMINISTRATOR', { checkAdmin: true, checkOwner: true }));
     this.isDM = message.channel.type !== 'text';
     this.isBot = message.author.bot;
     this.message = message;
@@ -74,9 +74,7 @@ class CommandCall {
         }
       }
       if (this.client.options.findBestMatch && this.command.hidden) {
-        const nonHidden = this.client.commands
-          .map((cmd, cmdName) => (cmd.hidden ? null : cmdName))
-          .filter(c => !!c);
+        const nonHidden = this.client.commands.map((cmd, cmdName) => (cmd.hidden ? null : cmdName)).filter(c => !!c);
         const secondBestMatch = findBestMatch(name, nonHidden)
           .ratings.slice()
           .sort((a, b) => a.rating - b.rating)[1];
@@ -85,9 +83,7 @@ class CommandCall {
     } else {
       this.commandExists = false;
       if (this.client.options.findBestMatch && name) {
-        const nonHidden = this.client.commands
-          .map((cmd, cmdName) => (cmd.hidden ? null : cmdName))
-          .filter(c => !!c);
+        const nonHidden = this.client.commands.map((cmd, cmdName) => (cmd.hidden ? null : cmdName)).filter(c => !!c);
         const best = findBestMatch(name, nonHidden).bestMatch.target;
         this.bestMatch = best;
       }
@@ -96,7 +92,7 @@ class CommandCall {
 
   findCommand(name) {
     const command = this.client.commands.get(name);
-    const alias = this.client.commands.find(c => c.aliases && c.aliases.includes(name));
+    const alias = this.client.commands.find(c => c.aliases && c.aliases.map(a => a.toLowerCase()).includes(name));
     if (command) {
       return {
         command,
