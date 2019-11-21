@@ -205,11 +205,11 @@ class CommandRunner extends Middleware {
         .catch(() => {});
     }
 
-    try {
-      call.command.run(message, call.args, call);
-    } catch (err) {
+    const runCommand = Promise.resolve();
+
+    runCommand().then(() => call.command.run(message, call.args, call)).catch((err) => {
       this.emitError(new CommandError(call.command, call, err));
-    }
+    });
   }
 
   /**
