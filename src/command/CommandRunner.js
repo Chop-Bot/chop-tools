@@ -144,7 +144,7 @@ class CommandRunner extends Middleware {
         .catch(() => {});
     }
 
-    const runCommand = Promise.resolve();
+    const runCommand = () => new Promise(r => r());
 
     runCommand().then(() => call.command.run(message, call.args, call)).catch((err) => {
       this.emitError(new CommandError(call.command, call, err));
