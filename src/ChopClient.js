@@ -7,6 +7,9 @@ const Schedule = require('./structures/Schedule');
 const Command = require('./structures/Command');
 const CommandStore = require('./stores/CommandStore');
 const CommandRunner = require('./command/CommandRunner');
+const Listener = require('./listener/Listener');
+const ListenerStore = require('./listener/ListenerStore');
+const ListenerRunner = require('./listener/ListenerRunner');
 const Util = require('./util/Util');
 
 /**
@@ -52,7 +55,7 @@ class ChopClient extends Discord.Client {
      * @type {CommandStore}
      */
     this.commands = new CommandStore(this, commands);
-    this.emit('debug', 'Loaded', this.commands.size, 'commands.');
+    this.runner = new CommandRunner(this, this.options);
 
     const tasks = fileLoader.loadDirectorySync({
       dir: 'tasks',
@@ -65,9 +68,19 @@ class ChopClient extends Discord.Client {
      * @type {Schedule}
      */
     this.schedule = new Schedule(this, tasks);
-    this.emit('debug', 'Loaded', this.schedule.tasks.size, 'tasks.');
 
-    this.runner = new CommandRunner(this, this.options);
+    const listeners = fileLoader.loadDirectorySync({
+      dir: 'listeners',
+      importClass: Listener,
+      makeDir: true,
+    });
+    /**
+     * A map of listeners loaded.
+     * @name ChopClient#listeners
+     * @type {Schedule}
+     */
+    this.listeners = new ListenerStore(this, listeners);
+    this.listenerRunner = new ListenerRunner(this);
 
     /**
      * Registers a new middleware.
@@ -79,6 +92,10 @@ class ChopClient extends Discord.Client {
 
   async login(token) {
     this.runner.listen();
+    this.listenerRunner.listen();
+    this.emit('debug', `Loaded ${this.commands.size} commands.`);
+    this.emit('debug', `Loaded ${this.schedule.tasks.size} tasks.`);
+    this.emit('debug', `Loaded ${this.listeners.size} listeners.`);
     return super.login(token);
   }
 

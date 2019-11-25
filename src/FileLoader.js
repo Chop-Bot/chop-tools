@@ -54,7 +54,7 @@ class FileLoader {
             newInstance.client = this.client;
             result.push(newInstance);
           } else {
-            console.warn('error', `Invalid ${ImportClass.name}: ${files[i]}`);
+            // console.warn('error', `Invalid ${ImportClass.name}: ${files[i]}`);
           }
         });
       } catch (err) {
@@ -124,10 +124,10 @@ class FileLoader {
           }
         });
       } catch (err) {
-        console.error(err);
+        // console.error(err);
       }
     } catch (err) {
-      console.error(err);
+      // console.error(err);
       return result;
     }
     return result;
