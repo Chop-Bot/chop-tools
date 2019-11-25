@@ -5,7 +5,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  extends: ['airbnb-base'],
+  extends: ['airbnb-base', 'prettier'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
@@ -16,7 +16,7 @@ module.exports = {
   },
   rules: {
     strict: 0,
-    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-console': 'warn',
     'linebreak-style': 'off',
     'no-unused-vars': 'warn',
     'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
@@ -26,6 +26,8 @@ module.exports = {
     'class-methods-use-this': 'off',
     'no-underscore-dangle': 'off',
     'no-param-reassign': 'off',
-    'max-len': ['error', { code: 100, comments: 150 }],
+    'max-len': ['warn', { code: 120, comments: 150 }],
+    'arrow-parens': 'off',
+    'object-curly-newline': 'off',
   },
 };
