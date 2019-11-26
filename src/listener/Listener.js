@@ -6,7 +6,7 @@ const Util = require('../util/Util');
  *
  * @class Listener
  * @property {string[]} words Words to watch for. (regex syntax)
- * @property {string} category The category this listener belongs to.
+ * @property {string} [category] The category this listener belongs to.
  * @property {number} cooldown Listener will not trigger for a user based on this cooldown.
  * @property {number} [globalCooldown] Cooldown that applies to all users.
  * @property {number} [priority] Lower priority means the listener runs earlier.
@@ -15,7 +15,9 @@ const Util = require('../util/Util');
  */
 class Listener {
   constructor({ words, cooldown, category, globalCooldown, priority, run }) {
-    if (!words || !cooldown || !run) throw new Error('A listener requires words, cooldown and a run function.');
+    if (!words || (!cooldown && cooldown !== 0) || !run) {
+      throw new Error('A listener requires words, cooldown and a run function.');
+    }
     this.words = words;
     this.category = category;
     this.cooldown = cooldown;
