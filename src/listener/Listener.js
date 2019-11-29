@@ -50,7 +50,7 @@ class Listener {
 
   toString() {
     if (!Array.isArray(this.words)) return this.words;
-    return `Listener [${this.words.join(' ')}]`;
+    return `Listener [${this.words.join(' ')} / ${this.category}]`;
   }
 }
 
