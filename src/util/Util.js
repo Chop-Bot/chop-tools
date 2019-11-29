@@ -35,7 +35,8 @@ class Util {
     me: "i('m|m|'ve|'ll|ll|mma)*",
     action: '(want|wanna|gonna|going to|will)',
     yes: '(y|yes|ye|yeah|mhm|sure|ok|okay|alright|alrighty|why not)',
-    be: '(am|was|(wi|\')*ll be|are|were|is|be)',
+    no: '(no|na|nah|not really|nope)',
+    be: '(am|was|will be|are|were|is|be)',
   };
 
   static listen(message, words) {
@@ -48,7 +49,7 @@ class Util {
       return placeholder;
     }
     // get the content of the message, remove punctuation and lower case it.
-    const content = message.content
+    const content = (message.content || '')
       // eslint-disable-next-line no-useless-escape
       .replace(/[\.,\/#!$%\^&\*;:\{\}=\-_`~()\?]/g, '')
       .replace(/\s{2,}/g, ' ')
@@ -65,6 +66,11 @@ class Util {
 
     // if words is not an array check if it is in content
     return content.match(wordRegex);
+  }
+
+  // Alias for listen()
+  static stringMatch(...args) {
+    Util.listen(...args);
   }
 }
 
