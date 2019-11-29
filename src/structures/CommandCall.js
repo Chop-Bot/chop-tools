@@ -6,6 +6,7 @@ const { findBestMatch } = require('string-similarity');
  * @property {string} callerTag The tag of the user that made the call.
  * @property {string} callerUsername The caller's username.
  * @property {string} callerNickname The caller's nickname if they have one.
+ * @property {external:Guild} guild The caller's nickname if they have one.
  * @property {Command} command The command for this call.
  * @property {string} commandName The command name.
  * @property {boolean} commandExists Wether the command exists.
@@ -30,6 +31,7 @@ class CommandCall {
     this.callerTag = message.author.tag;
     this.callerUsername = message.author.username;
     this.callerNickname = message.author.nickname;
+    this.guild = message.guild;
     this.isSuperUser = this.client.options.owners.includes(this.caller);
     this.isAdmin =
       this.isSuperUser ||
