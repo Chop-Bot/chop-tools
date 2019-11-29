@@ -36,7 +36,7 @@ class Util {
     action: '(want|wanna|gonna|going to|will)',
     yes: '(y|yes|ye|yeah|mhm|sure|ok|okay|alright|alrighty|why not)',
     no: '(no|na|nah|not really|nope)',
-    be: '(am|was|will be|are|were|is|be)',
+    be: '(i\'m|am|was|will be|are|were|is|be)',
   };
 
   static listen(message, words) {
