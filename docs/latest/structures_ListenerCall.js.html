@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: structures/Command.js | Chop Tools</title>
+    <title>Source: structures/ListenerCall.js | Chop Tools</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -59,93 +59,46 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const Joi = require('@hapi/joi');
-const merge = require('lodash.merge');
-
-const commandSchema = Joi.object()
-  .keys({
-    name: Joi.string()
-      .regex(/^[a-zA-Z0-9_-]+$/, 'name')
-      .min(1),
-    description: Joi.string()
-      .required()
-      .min(1),
-    usage: Joi.string().min(1),
-    example: Joi.string().min(1),
-    examples: Joi.array().items(Joi.string().min()),
-    help: Joi.string().min(1),
-    category: Joi.string()
-      .alphanum()
-      .min(1),
-    aliases: Joi.array().items(
-      Joi.string()
-        .regex(/^[a-zA-Z0-9_-]+$/, 'name')
-        .min(1),
-    ),
-    permissions: Joi.array().items(Joi.number()),
-    cooldown: Joi.number().min(0),
-    hidden: Joi.bool(),
-    admin: Joi.bool(),
-    delete: Joi.bool(),
-    runIn: Joi.array()
-      .min(1)
-      .items(Joi.string().valid('text', 'dm')),
-    args: Joi.array().items(Joi.string()),
-    run: Joi.func(),
-  })
-  .requiredKeys('', 'name', 'description', 'runIn');
-
-/**
- * @typedef {Function} CommandExecutor
- * @param {external:Message} message The message that called this command.
- * @param {string[]} args The args this command was called with.
- * @param {CommandCall} call The command call object.
+            <pre class="prettyprint source linenums"><code>/**
+ * Represents a command call.
+ * @property {string} caller The id of the user that made the call.
+ * @property {string} callerTag The tag of the user that made the call.
+ * @property {string} callerUsername The caller's username.
+ * @property {string} callerNickname The caller's nickname if they have one.
+ * @property {external:Guild} guild The caller's nickname if they have one.
+ * @property {Listener} listener The command for this call.
+ * @property {boolean} isDM Was the command called from a dm?
+ * @property {boolean} isBot Did a bot call this command?
+ * @property {boolean} isAdmin Does the caller have admin permission?
+ * @property {boolean} isSuperUser Is the caller a super user?
+ * @property {external:Message} message The message associated with this call.
+ * @property {Date} time When the command was called.
  */
+class ListenerCall {
+  constructor(client, listener, message) {
+    this.client = client;
 
-/**
- * Represents a command.
- * @property {string} name The command name.
- * @property {string} description The command description.
- * @property {string} usage How to use the command.
- * @property {string} [example] An example of the command being used.
- * @property {string[]} [examples] An example of the command being used.
- * @property {string} help The text displayed when the user uses help [command name].
- * @property {string} category The category to which this command belongs.
- * @property {string[]} aliases Alternative names for this command.
- * @property {number[]} [permissions=[]] The permissions for this command.
- * @property {number} [cooldown=3] The cooldown in seconds for this command.
- * @property {string[]} [runIn=['text']] Where to allow this command to be used. Options: 'text' and 'dm'
- * @property {boolean} [hidden=false] Only users set in the owners config will be able to use this command.
- * @property {string[]} [args=[]] The commands this command takes. (Mostly for formatting the error message.)
- * @property {boolean} [delete=false] Wether the message that called this command should be deleted. Note: bot needs the appropriate permissions.
- * @property {CommandExecutor} run The function that will be executed when the command is called.
- * @tutorial 02 - Commands
- * @since v0.0.1
- */
-class Command {
-  /**
-   * @param {Object} options={} The options for this command.
-   * @memberof Command
-   */
-  constructor(options = {}) {
-    const defaults = {
-      aliases: [],
-      permissions: [],
-      cooldown: 3,
-      runIn: ['text'],
-      hidden: false,
-      args: [],
-      delete: false,
-    };
-    const merged = merge(defaults, options);
-    commandSchema.validate(merged, (err, value) => {
-      if (err) throw err;
-      Object.assign(this, value);
-    });
+    // Known
+    this.caller = message.author.id;
+    this.callerTag = message.author.tag;
+    this.callerUsername = message.author.username;
+    this.callerNickname = message.author.nickname;
+    this.guild = message.guild;
+    this.isSuperUser = this.client.options.owners.includes(this.caller);
+    this.isDM = message.channel.type === 'dm';
+    this.isBot = message.author.bot;
+    this.message = message;
+    this.time = new Date();
+    this.listener = listener;
+    function hasAdminPermission() {
+      return message.member &amp;&amp; message.member.hasPermission('ADMINISTRATOR', { checkAdmin: true, checkOwner: true });
+    }
+    this.isAdmin = this.isSuperUser || hasAdminPermission();
+
   }
 }
 
-module.exports = Command;
+module.exports = ListenerCall;
 </code></pre>
         </article>
     </section>

@@ -1,10 +1,8 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: structures/Command.js | Chop Tools</title>
+    <title>Class: ListenerCall | Chop Tools</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -56,99 +54,437 @@
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>const Joi = require('@hapi/joi');
-const merge = require('lodash.merge');
+        <h2><span class="attribs"><span class="type-signature"></span></span>ListenerCall<span class="signature">()</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description"><p>Represents a command call.</p></div>
+        
+    
+</header>
 
-const commandSchema = Joi.object()
-  .keys({
-    name: Joi.string()
-      .regex(/^[a-zA-Z0-9_-]+$/, 'name')
-      .min(1),
-    description: Joi.string()
-      .required()
-      .min(1),
-    usage: Joi.string().min(1),
-    example: Joi.string().min(1),
-    examples: Joi.array().items(Joi.string().min()),
-    help: Joi.string().min(1),
-    category: Joi.string()
-      .alphanum()
-      .min(1),
-    aliases: Joi.array().items(
-      Joi.string()
-        .regex(/^[a-zA-Z0-9_-]+$/, 'name')
-        .min(1),
-    ),
-    permissions: Joi.array().items(Joi.number()),
-    cooldown: Joi.number().min(0),
-    hidden: Joi.bool(),
-    admin: Joi.bool(),
-    delete: Joi.bool(),
-    runIn: Joi.array()
-      .min(1)
-      .items(Joi.string().valid('text', 'dm')),
-    args: Joi.array().items(Joi.string()),
-    run: Joi.func(),
-  })
-  .requiredKeys('', 'name', 'description', 'runIn');
+<article>
+    
+        <div class="container-overview">
+        
+            
 
-/**
- * @typedef {Function} CommandExecutor
- * @param {external:Message} message The message that called this command.
- * @param {string[]} args The args this command was called with.
- * @param {CommandCall} call The command call object.
- */
+<dt>
+    
+        <h4 class="name" id="ListenerCall">
+            
+                new <span class="type-signature"></span>ListenerCall<span class="signature">()</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="structures_ListenerCall.js.html">structures/ListenerCall.js</a></code>,
+                <code><a href="structures_ListenerCall.js.html#line17">line 17</a></code>
+            </div>
+            
+        </h4>
 
-/**
- * Represents a command.
- * @property {string} name The command name.
- * @property {string} description The command description.
- * @property {string} usage How to use the command.
- * @property {string} [example] An example of the command being used.
- * @property {string[]} [examples] An example of the command being used.
- * @property {string} help The text displayed when the user uses help [command name].
- * @property {string} category The category to which this command belongs.
- * @property {string[]} aliases Alternative names for this command.
- * @property {number[]} [permissions=[]] The permissions for this command.
- * @property {number} [cooldown=3] The cooldown in seconds for this command.
- * @property {string[]} [runIn=['text']] Where to allow this command to be used. Options: 'text' and 'dm'
- * @property {boolean} [hidden=false] Only users set in the owners config will be able to use this command.
- * @property {string[]} [args=[]] The commands this command takes. (Mostly for formatting the error message.)
- * @property {boolean} [delete=false] Wether the message that called this command should be deleted. Note: bot needs the appropriate permissions.
- * @property {CommandExecutor} run The function that will be executed when the command is called.
- * @tutorial 02 - Commands
- * @since v0.0.1
- */
-class Command {
-  /**
-   * @param {Object} options={} The options for this command.
-   * @memberof Command
-   */
-  constructor(options = {}) {
-    const defaults = {
-      aliases: [],
-      permissions: [],
-      cooldown: 3,
-      runIn: ['text'],
-      hidden: false,
-      args: [],
-      delete: false,
-    };
-    const merged = merge(defaults, options);
-    commandSchema.validate(merged, (err, value) => {
-      if (err) throw err;
-      Object.assign(this, value);
-    });
-  }
-}
+        
+    
+</dt>
+<dd>
 
-module.exports = Command;
-</code></pre>
-        </article>
-    </section>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>caller</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The id of the user that made the call.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>callerTag</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The tag of the user that made the call.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>callerUsername</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The caller's username.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>callerNickname</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The caller's nickname if they have one.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>guild</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">external:Guild</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The caller's nickname if they have one.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>listener</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Listener.html">Listener</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The command for this call.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isDM</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Was the command called from a dm?</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isBot</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Did a bot call this command?</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isAdmin</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Does the caller have admin permission?</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isSuperUser</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Is the caller a super user?</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="external-Message.html">external:Message</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The message associated with this call.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>time</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>When the command was called.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+        
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
@@ -165,7 +501,7 @@ module.exports = Command;
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = '_sub'.replace(/"/g, '_');
+        var id = 'ListenerCall_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 
