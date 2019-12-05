@@ -11,6 +11,7 @@ const { findBestMatch } = require('string-similarity');
  * @property {string} commandName The command name.
  * @property {boolean} commandExists Wether the command exists.
  * @property {string} bestMatch The command with best matching name.
+ * @property {string} content The content after the command name. Or after the last argument if the command expects arguments.
  * @property {string[]} args The arguments the command was called with.
  * @property {boolean} hasEnoughArgs Wether the call has enough arguments.
  * @property {string} missingArg The first missing argument if not enough arguments.
@@ -74,10 +75,13 @@ class CommandCall {
       this.commandExists = true;
       this.hasEnoughArgs = true;
       if (this.command.args && this.command.args.length > 0) {
+        this.content = this.args.slice(this.command.args.length).join(' ');
         if (this.args.length < this.command.args.length) {
           this.hasEnoughArgs = false;
           this.missingArg = this.command.args[this.args.length];
         }
+      } else {
+        this.content = this.args.join(' ');
       }
       if (this.client.options.findBestMatch && this.command.hidden) {
         const nonHidden = this.client.commands.map((cmd, cmdName) => (cmd.hidden ? null : cmdName)).filter(c => !!c);
@@ -98,13 +102,13 @@ class CommandCall {
 
   findCommand(name) {
     const command = this.client.commands.get(name);
-    const alias = this.client.commands.find(c => c.aliases && c.aliases.map(a => a.toLowerCase()).includes(name));
     if (command) {
       return {
         command,
         isAlias: false,
       };
     }
+    const alias = this.client.commands.find(c => c.aliases && c.aliases.map(a => a.toLowerCase()).includes(name));
     if (alias) {
       return {
         command: alias,
