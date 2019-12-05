@@ -72,7 +72,7 @@ const commandSchema = Joi.object()
       .min(1),
     usage: Joi.string().min(1),
     example: Joi.string().min(1),
-    examples: Joi.array().items(Joi.string().min()),
+    examples: Joi.array().items(Joi.string().min(1)),
     help: Joi.string().min(1),
     category: Joi.string()
       .alphanum()

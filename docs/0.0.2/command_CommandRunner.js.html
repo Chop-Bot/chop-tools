@@ -98,7 +98,7 @@ class CommandRunner extends Middleware {
       const isPrefixed = content.replace(/\s\s+/g, ' ').startsWith(this.options.prefix);
       if (!isPrefixed || (message.author.bot &amp;&amp; !this.options.allowBots)) return;
 
-      const isDM = message.channel.type !== 'text';
+      const isDM = message.channel.type === 'dm';
       if (isDM &amp;&amp; this.options.dmCommands === 'ignore') return;
       if (isDM &amp;&amp; this.options.dmCommands === 'error') {
         this.sendMessage(message.channel, this.options.messages.directMessageError);
