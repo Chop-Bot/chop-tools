@@ -69,17 +69,20 @@
 
     <section>
         <article class="readme"><h1>Chop Tools</h1>
+<p><img src="https://api.travis-ci.org/Chop-Bot/chop-tools.svg?branch=master" alt="Build"></p>
 <p>Welcome to Chop Tools. A discord bot framework based on <a href="https://github.com/discordjs/discord.js">discord.js</a> with commands and tasks working out of the box.</p>
 <h2>Features</h2>
 <ul>
-<li>Commands
+<li>
+<p>Commands</p>
 <ul>
 <li>Easy to use.</li>
 <li>Suggestion system if command not found.</li>
 <li>No configuration needed.</li>
 </ul>
 </li>
-<li>Tasks
+<li>
+<p>Tasks</p>
 <ul>
 <li>Run code on scheduled intervals.</li>
 <li>Run code on specific dates.</li>
@@ -90,7 +93,7 @@
 <ul>
 <li>Prompter - Prompt for a user response using reactions or messages.</li>
 </ul>
-<h1>Bot Example</h1>
+<h2>Bot Example</h2>
 <pre class="prettyprint source lang-javascript"><code>const ChopTools = require('chop-tools');
 
 const client = new ChopTools.Client({ prefix: '!', owners: ['YOUR ID HERE'] });
@@ -103,7 +106,7 @@ client.login('YOUR TOKEN GOES HERE').then(() => {
   console.log('Login successful!');
 });
 </code></pre>
-<h1>Creating Commands</h1>
+<h2>Creating Commands</h2>
 <p>At the entry point of your application create a directory named <code>commands</code>.<br>
 All files ending with .js in this <code>commands</code> directory will be loaded as commands.</p>
 <h2>Command Example</h2>
@@ -127,7 +130,7 @@ module.exports = new Command({
 <li>You <strong>can</strong> have subfolders in the commands directory.</li>
 <li>You can access the <a href="https://chop-bot.github.io/chop-tools/latest/ChopClient.html">client</a> inside the run method by using <code>this.client</code>. (This will NOT work if <code>run</code> is a arrow function).</li>
 </ul>
-<h1>API</h1>
+<h2>API</h2>
 <p><a href="http://chop-bot.github.io/chop-tools/latest/">Documentation</a></p></article>
     </section>
 

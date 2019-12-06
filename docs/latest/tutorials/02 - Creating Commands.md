@@ -2,22 +2,23 @@
 
 Chop Tools supports commands out of the box. To begin using commands, set your prefix on the client constructor and place your commands in a directory named `commands` in the same level as your `index.js`.
 
-### ⚠ Important
-
-You can see all the properties a command can have [on the api docs](./Command.html).
+**Note:** You can see all the properties a command can have [on the api docs](./Command.html).
 
 ## Examples
 
 The file structure
 
 -   src/
+
     -   index.js
     -   commands/
+
         -   hello.js
         -   hearts.js
         -   secret.js
         -   avatar.js
         -   extra-cool-commands/
+
             -   cute.js
             -   roll.js
             -   shrug.js
