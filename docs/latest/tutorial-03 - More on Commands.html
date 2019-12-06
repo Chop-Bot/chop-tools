@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Tutorial: 03 - More on Commands | Chop Tools</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="width: 32px; height: 32px">
+        
+            <a href="https://github.com/Chop-Bot/chop-tools" rel="noopener noreferrer" target="_blank">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABsklEQVRYhb2Xr5LCMBDGv9xgiUbEMoOvQlLPc3QqeJoTN3kOfJGn6pnBVqDDAwTRa5uG/NkUcp8CkuH7ZXe76TJY0lpr+7dPijHGzO8r27zen3L6Q2utTYiVuVDvTzhuRFaAen+aQTCXeVHxLOatVACA873Dz+83GGNsZW8qKg7edFkAikqMEINeAFy63JZF5LBV0T0kAKAPW4qotUQC6E8icL53aB7X4N5yvcNxI0inJwOYEAC8EKnmAPDlW7jcOC43DlVOoTxsFY4bgXK9I5mrUoz/kwwA9HlvpYpC+MxbqaK1E03B+d4BUqCoxPh4mukAsNicBDDmOwDhM28eV2e6kgDiEJNsc4qCNWBDuGriHXMg4TEcIAAAUuCwna8tMQcSIpBLSQDD4+a6LYuKe3vERwBMc9dtyZtuEQQJwGdud7klENEiDJlPjWZqRD2EAOSHbsOQ+bzi3RBvtWKq+fQ5PRJegLHLNVO3c588DGH3CzKArZB5CCIm8jvhkEtKdfd7aRDkCOSaFxLeCfPoBaCVqq/eDLJnAuBvMgL+bzQzp6IZgAmRU6b5C8AAkRPAHs+fhFQrccapM5EAAAAASUVORK5CYII=" width="100%" height="100%">
+            </a>
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">Chop Tools</a></h1>
+        
+            <span class="version">v0.0.2</span>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+        <ol class="lnb-tab">
+            <li id="api-tab">
+                <a href="#"><h4>API</h4></a>
+            </li>
+            <li id="examples-tab">
+                <a href="#"><h4>Guides</h4></a>
+            </li>
+        </ol>
+    
+    <div class="lnb-examples hidden"><h3>Guides</h3><ul><li><a href="tutorial-01 - Getting Started.html">01 - Getting Started</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="01 - Getting Started_sub"></div></li><li><a href="tutorial-02 - Creating Commands.html">02 - Creating Commands</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="02 - Creating Commands_sub"></div></li><li><a href="tutorial-03 - More on Commands.html">03 - More on Commands</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="03 - More on Commands_sub"></div></li><li><a href="tutorial-04 - Tasks.html">04 - Tasks</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="04 - Tasks_sub"></div></li><li><a href="tutorial-05 - Configuration.html">05 - Configuration</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="05 - Configuration_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Externals</h3><ul><li><a href="external-Client.html">Client</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Client_sub"></div></li><li><a href="external-ClientOptions.html">ClientOptions</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:ClientOptions_sub"></div></li><li><a href="external-Message.html">Message</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Message_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="ChopClient.html">ChopClient</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="ChopClient_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="ChopClient.html#commands">commands</a></li><li><a href="ChopClient.html#listeners">listeners</a></li><li><a href="ChopClient.html#schedule">schedule</a></li></ul></div></li><li><a href="Command.html">Command</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Command_sub"></div></li><li><a href="CommandCall.html">CommandCall</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="CommandCall_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="CommandCall.html#parseAndSave">parseAndSave</a></li></ul></div></li><li><a href="CommandError.html">CommandError</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="CommandError_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="CommandError.html#call">call</a></li><li><a href="CommandError.html#error">error</a></li></ul></div></li><li><a href="CommandRunner.html">CommandRunner</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="CommandRunner_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="CommandRunner.html#cooldowns">cooldowns</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="CommandRunner.html#emitError">emitError</a></li><li><a href="CommandRunner.html#listen">listen</a></li><li><a href="CommandRunner.html#run">run</a></li><li><a href="CommandRunner.html#sendMessage">sendMessage</a></li></ul></div></li><li><a href="CommandStore.html">CommandStore</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="CommandStore_sub"></div></li><li><a href="Configuration.html">Configuration</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Configuration_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Configuration.html#.getChopJsConfig">getChopJsConfig</a></li><li><a href="Configuration.html#.getChopJsonConfig">getChopJsonConfig</a></li><li><a href="Configuration.html#.getConfig">getConfig</a></li><li><a href="Configuration.html#.getPackageJsonConfig">getPackageJsonConfig</a></li><li><a href="Configuration.html#.hasChopJsConfig">hasChopJsConfig</a></li><li><a href="Configuration.html#.hasChopJsonConfig">hasChopJsonConfig</a></li><li><a href="Configuration.html#.hasConfigs">hasConfigs</a></li><li><a href="Configuration.html#.hasPackageJsonConfig">hasPackageJsonConfig</a></li></ul></div></li><li><a href="CooldownManager.html">CooldownManager</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="CooldownManager_sub"></div></li><li><a href="FileLoader.html">FileLoader</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="FileLoader_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="FileLoader.html#client">client</a></li><li><a href="FileLoader.html#root">root</a></li></ul></div></li><li><a href="Listener.html">Listener</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Listener_sub"></div></li><li><a href="ListenerCall.html">ListenerCall</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="ListenerCall_sub"></div></li><li><a href="ListenerIgnoreList.html">ListenerIgnoreList</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="ListenerIgnoreList_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="ListenerIgnoreList.html#clear">clear</a></li><li><a href="ListenerIgnoreList.html#ignoreChannel">ignoreChannel</a></li><li><a href="ListenerIgnoreList.html#ignoreGuild">ignoreGuild</a></li><li><a href="ListenerIgnoreList.html#listenChannel">listenChannel</a></li><li><a href="ListenerIgnoreList.html#listenGuild">listenGuild</a></li></ul></div></li><li><a href="ListenerRunner.html">ListenerRunner</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="ListenerRunner_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="ListenerRunner.html#listen">listen</a></li></ul></div></li><li><a href="ListenerStore.html">ListenerStore</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="ListenerStore_sub"></div></li><li><a href="Schedule.html">Schedule</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Schedule_sub"></div></li><li><a href="Task.html">Task</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Task_sub"></div></li><li><a href="TaskStore.html">TaskStore</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="TaskStore_sub"></div></li></ul></div><div class="lnb-api hidden"><h3><a href="global.html">Global</a></h3></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+<section>
+    <header>
+        
+
+        <h2>03 - More on Commands</h2>
+    </header>
+
+    
+        <article class="readme">
+            <h1>More on Commands</h1>
+<p>This page will tell you about more advanced command features. Use them to empower and make your bot unique.</p>
+<h2>Commands in DMs</h2>
+<p>Commands in DMs are disabled by default. You can enable them by setting <code>dmCommands</code> to <code>allow</code> when instantiating a new client. See <a href="./global.html#ChopOptions">ChopOptions</a>.</p>
+<h3>dm.js</h3>
+<ul>
+<li>Usage: !dm</li>
+<li>Aliases: !directmessage</li>
+<li>Works in DMs.</li>
+</ul>
+<pre class="prettyprint source lang-javascript"><code>const { Command } = require('chop-tools');
+
+module.exports = new Command({
+  name: 'dm',
+  description: 'This command works in DM.',
+  category: 'testing',
+  aliases: ['directmessage'],
+  // This will make this command work in DMs.
+  runIn: ['dm'],
+  run(message, args, call) {
+    message.author.send(`Hello there ${message.author}, how can I help you?`);
+  },
+});
+</code></pre>
+<h2>Arguments of the Run function</h2>
+<p>Your command's <code>run</code> function will receive 3 arguments: the message object, the arguments the user used and the <a href="./CommandCall.html">call object</a>.</p>
+<h3>message</h3>
+<p>See <a href="https://discord.js.org/#/docs/main/master/class/Message">Message</a>.</p>
+<h3>args</h3>
+<p>Assuming your prefix is <code>!</code> and you have a command named <code>today</code> and the user uses it as <code>!today i'm happy</code> the value for <code>args</code> will be the following array: <code>[&quot;i'm&quot;, &quot;happy&quot;]</code>.<br>
+On the previous page, the roll command used the first arg as the number of sides for the dice roll.</p>
+<h3>call</h3>
+<p>The call object contain useful information about this command call and can be modified by command middleware. See <a href="./CommandCall.html">CommandCall</a> for a list of available properties.</p>
+<h2>Run function behavior</h2>
+<p>The run function will be called whenever someones uses its command.</p>
+<h3>Function vs Arrow</h3>
+<p>After your command is loaded by chop-tools it gets assigned a property <code>client</code> with the current client. You can access this client in the run function with <code>this.client</code>. But it will not work if run is a arrow function.</p>
+<pre class="prettyprint source lang-javascript"><code>// this works
+const run = function () {
+  console.log(this.client.user.tag) // -> YourAwesomeBot#1234
+}
+
+// this also works, but no this.client
+const run = () => console.log(this.client); // -> undefined
+
+// If you're not planning on using this.client anyway you can do something like:
+module.exports = new Command({
+  name: 'ping',
+  description: 'pong',
+  category: 'testing',
+  run: m => m.reply('pong'),
+});
+</code></pre>
+<h3>Async/Await</h3>
+<p>Async functions for run are supported.</p>
+<pre class="prettyprint source lang-javascript"><code>const { Command } = require('chop-tools');
+
+// Resolves after t milliseconds.
+const wait = t => new Promise(r => setTimeout(r, t));
+
+module.exports = new Command({
+  name: 'lucky',
+  description: 'What is your lucky number?',
+  category: 'funny',
+  async run(message, args, call) {
+    // A random number.
+    const luckyNumber = Math.round(Math.random() * 100);
+    // Sends the message. See discord.js's TextChannel.send().
+    const msg = await channel.send('Your lucky number is...');
+    // Waits for a second.
+    await wait(1000);
+    // Edits the message to add the lucky number.
+    msg.edit(`${msg.content} **${luckyNumber}**!!`);
+  },
+});
+</code></pre>
+<h2>Middleware</h2>
+<p>TODO: Write middleware documentation. @_@ ;-;</p>
+<p>TODO: Check wether these middleware support async functions. &gt;_&lt;</p>
+<pre class="prettyprint source lang-javascript"><code>client.use((call, next) => {
+  const time = new Date().toLocaleTimeString();
+  const tag = call.callerTag;
+  const content = call.message.content;
+  const guild = call.message.guild.name;
+  // logs command usage
+  console.log(`[${time}] ${tag}: ${content} | (${guild})`);
+  // will output something like:
+  // [05:56:00] Someone#1234: !coolcommand 123 | (Cool Guild Name)
+  next();
+});
+</code></pre>
+        </article>
+    
+</section>
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABsklEQVRYhb2Xr5LCMBDGv9xgiUbEMoOvQlLPc3QqeJoTN3kOfJGn6pnBVqDDAwTRa5uG/NkUcp8CkuH7ZXe76TJY0lpr+7dPijHGzO8r27zen3L6Q2utTYiVuVDvTzhuRFaAen+aQTCXeVHxLOatVACA873Dz+83GGNsZW8qKg7edFkAikqMEINeAFy63JZF5LBV0T0kAKAPW4qotUQC6E8icL53aB7X4N5yvcNxI0inJwOYEAC8EKnmAPDlW7jcOC43DlVOoTxsFY4bgXK9I5mrUoz/kwwA9HlvpYpC+MxbqaK1E03B+d4BUqCoxPh4mukAsNicBDDmOwDhM28eV2e6kgDiEJNsc4qCNWBDuGriHXMg4TEcIAAAUuCwna8tMQcSIpBLSQDD4+a6LYuKe3vERwBMc9dtyZtuEQQJwGdud7klENEiDJlPjWZqRD2EAOSHbsOQ+bzi3RBvtWKq+fQ5PRJegLHLNVO3c588DGH3CzKArZB5CCIm8jvhkEtKdfd7aRDkCOSaFxLeCfPoBaCVqq/eDLJnAuBvMgL+bzQzp6IZgAmRU6b5C8AAkRPAHs+fhFQrccapM5EAAAAASUVORK5CYII=" style="width: 32px; height: 32px">
+    <div class="footer-text">A discord bot framework based on discord.js.</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        showLnbExamples();
+    </script>
+
+</body>
+</html>
