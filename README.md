@@ -1,14 +1,19 @@
 # Chop Tools
 
+![Build](https://api.travis-ci.org/Chop-Bot/chop-tools.svg?branch=master)
+
 Welcome to Chop Tools. A discord bot framework based on [discord.js](https://github.com/discordjs/discord.js) with commands and tasks working out of the box.
 
 ## Features
 
 -   Commands
+
     -   Easy to use.
     -   Suggestion system if command not found.
     -   No configuration needed.
+
 -   Tasks
+
     -   Run code on scheduled intervals.
     -   Run code on specific dates. 
 
@@ -16,7 +21,7 @@ Welcome to Chop Tools. A discord bot framework based on [discord.js](https://git
 
 -   Prompter - Prompt for a user response using reactions or messages.
 
-# Bot Example
+## Bot Example
 
 ```javascript
 const ChopTools = require('chop-tools');
@@ -32,7 +37,7 @@ client.login('YOUR TOKEN GOES HERE').then(() => {
 });
 ```
 
-# Creating Commands
+## Creating Commands
 
 At the entry point of your application create a directory named `commands`.
 All files ending with .js in this `commands` directory will be loaded as commands.
@@ -61,6 +66,6 @@ module.exports = new Command({
 -   You **can** have subfolders in the commands directory.
 -   You can access the [client](https://chop-bot.github.io/chop-tools/latest/ChopClient.html) inside the run method by using `this.client`. (This will NOT work if `run` is a arrow function).
 
-# API
+## API
 
 [Documentation](http://chop-bot.github.io/chop-tools/latest/)
