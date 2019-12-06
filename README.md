@@ -2,7 +2,7 @@
 
 ![Build](https://api.travis-ci.org/Chop-Bot/chop-tools.svg?branch=master)
 [![Chop](https://img.shields.io/static/v1?label=Chop&message=%E2%98%95%F0%9F%8D%B5&color=e39e36)](https://chop.coffee/)
-[![Bloo](https://img.shields.io/static/v1?label=Chop&message=%F0%9F%92%99%F0%9F%8C%8E&color=36b5e3)](https://github.com/xbabyblu/Bloo-Bot)
+[![Bloo](https://img.shields.io/static/v1?label=Bloo&message=%F0%9F%92%99%F0%9F%8C%8E&color=36b5e3)](https://github.com/xbabyblu/Bloo-Bot)
 
 Welcome to Chop Tools. A discord bot framework based on [discord.js](https://github.com/discordjs/discord.js) with commands and tasks working out of the box.
 
