@@ -4,9 +4,10 @@
   "description": "A Discord.JS Bot Framework",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest",
+    "test": "npm run lint && jest",
     "docs": "./node_modules/.bin/jsdoc -c ./gendocs.js --verbose",
-    "docs-push": "git add ./docs/** && git commit -m \"📝 Generated docs\" && git push"
+    "docs-push": "git add ./docs/** && git commit -m \"📝 Generated docs\" && git push",
+    "lint": "eslint ./src --color"
   },
   "keywords": [
     "discord.js",
