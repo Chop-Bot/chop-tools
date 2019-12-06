@@ -30,39 +30,31 @@ class ListenerRunner {
       if (this.client.listeners.ignored.guilds.has(message.guild.id)) return;
       if (this.client.listeners.ignored.channels.has(message.channel.id)) return;
 
-      try {
-        if (!this.client.listeners.size) return;
+      if (!this.client.listeners.size) return;
 
-        // if a listener in a category returns true, skip to the next category
-        Object.entries(this.mappedListeners).forEach(async ([category, listeners]) => {
-          // eslint-disable-next-line no-restricted-syntax
-          for (const listener of listeners) {
-            try {
-              let result;
-              const evaluation = listener.evaluate(message);
-              if (evaluation instanceof Promise) {
-                // eslint-disable-next-line no-await-in-loop
-                result = await evaluation;
-              } else {
-                result = evaluation;
-              }
-              if (result) {
-                this.client.emit(
-                  'debug',
-                  `Skipping listeners in the "${listener.category}" category because "${listener.name}" triggered. ` +
-                    `Current loop: (${category})`,
-                );
-                break;
-              }
-            } catch (e) {
-              this.client.emit('error', e);
-              break;
-            }
+      // if a listener in a category returns true, skip to the next category
+      Object.entries(this.mappedListeners).forEach(async ([category, listenersInThisCategory]) => {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const listener of listenersInThisCategory) {
+          let result;
+          try {
+            const evaluation = listener.evaluate(message);
+            // eslint-disable-next-line no-await-in-loop
+            result = evaluation instanceof Promise ? await evaluation : evaluation;
+          } catch (e) {
+            this.client.emit('error', e);
+            break;
           }
-        });
-      } catch (e) {
-        this.client.emit('error', e);
-      }
+          if (result === true) {
+            this.client.emit(
+              'debug',
+              `Skipping listeners in the "${listener.category}" category because "${listener.name}" returned true. ` +
+                `Current iteration: (${category})`,
+            );
+            break;
+          }
+        }
+      });
     });
   }
 }

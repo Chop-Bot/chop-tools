@@ -55,7 +55,7 @@ class ChopClient extends Discord.Client {
      * @type {CommandStore}
      */
     this.commands = new CommandStore(this, commands);
-    this.runner = new CommandRunner(this, this.options);
+    this._commandRunner = new CommandRunner(this, this.options);
 
     const tasks = fileLoader.loadDirectorySync({
       dir: 'tasks',
@@ -80,19 +80,16 @@ class ChopClient extends Discord.Client {
      * @type {Schedule}
      */
     this.listeners = new ListenerStore(this, listeners);
-    this.listenerRunner = new ListenerRunner(this);
+    this._listenerRunner = new ListenerRunner(this);
 
-    /**
-     * Registers a new middleware.
-     * @param {Function} middleware
-     * @see {@tutorial Command Middleware}
-     */
-    this.use = (...args) => this.runner.use(...args);
+    this.use = (...args) => this._commandRunner.use(...args);
   }
 
   async login(token) {
-    this.runner.listen();
-    this.listenerRunner.listen();
+    // TODO: For the love of all gods, make this async!
+    // FIXME: PLEASE.
+    this._commandRunner.listen();
+    this._listenerRunner.listen();
     this.emit('debug', `Loaded ${this.commands.size} commands.`);
     this.emit('debug', `Loaded ${this.schedule.tasks.size} tasks.`);
     this.emit('debug', `Loaded ${this.listeners.size} listeners.`);
