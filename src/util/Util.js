@@ -32,9 +32,10 @@ class Util {
   }
 
   static COMMON_EXPRESSIONS = {
+    // TODO: find a way to add "me" in here
     me: "i('m|m|'ve|'ll|ll|mma)*",
     action: '(want|wanna|gonna|going to|will)',
-    yes: '(y|yes|ye|yeah|mhm|sure|ok|okay|alright|alrighty|why not)',
+    yes: '(y|yes|ye|yeah|indeed|correct|mhm|sure|ok|okay|alright|alrighty|why not)',
     no: '(no|na|nah|not really|nope)',
     be: '(i\'m|am|was|will be|are|were|is|be)',
   };

@@ -27,15 +27,22 @@ class Listener {
     this.run = run;
   }
 
-  evaluate = message => {
+  evaluate(message, call, pre) {
     const { author } = message;
+    // TODO: move this outside (listener runner) \\\\\\\\\\\\\\\\\\\\\\\//////////////////////////
     if (author.bot) return false;
     // Global cooldown for this listener.
     if (this.globalCooldown && Date.now() - this.cooldowns.get('GLOBAL') < 0) return false;
     // if no records for this user or if off cooldown
     if (!this.cooldowns.get(author.id) || Date.now() - this.cooldowns.get(author.id) > 0) {
+      // TODO: move this outside ////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
       // do stuff
       if (Util.listen(message, this.words)) {
+        // TODO: BRUH FINISH THIS
+        // FIXME: BRUH FINISH THIS!
+        // run "pre" here
+        // if (this.client.listeners.ignored.guilds.has(message.guild.id)) return;
+        // if (this.client.listeners.ignored.channels.has(message.channel.id)) return;
         const result = this.run(message);
         // set cooldown
         this.cooldowns.set(author.id, Date.now() + this.cooldown * 1000);
@@ -46,7 +53,7 @@ class Listener {
       }
     }
     return false;
-  };
+  }
 
   toString() {
     if (!Array.isArray(this.words)) return this.words;
