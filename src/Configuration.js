@@ -111,7 +111,7 @@ class Configuration {
    * @memberof Configuration
    */
   static hasChopJsonConfig() {
-    const configPath = findUp('chop.json');
+    const configPath = findUp('chop.config.json');
     if (configPath) {
       try {
         const config = module.require(configPath);
@@ -130,7 +130,7 @@ class Configuration {
    * @memberof Configuration
    */
   static getChopJsonConfig() {
-    const configPath = findUp('chop.json');
+    const configPath = findUp('chop.config.json');
     return module.require(configPath);
   }
 
