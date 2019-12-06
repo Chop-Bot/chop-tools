@@ -43,7 +43,7 @@ class FileLoader {
       try {
         // eslint-disable-next-line global-require
         const requires = files.map(t => require(t.replace(__dirname, './')));
-        requires.forEach((Imported, i) => {
+        requires.forEach(Imported => {
           // check if Imported is a instance of ImportClass or a class that extends ImportClass
           const isInstance = Imported instanceof ImportClass;
           if (isInstance) {
@@ -58,10 +58,10 @@ class FileLoader {
           }
         });
       } catch (err) {
-        console.error(err);
+        this.client.emit('error', err);
       }
     } catch (err) {
-      console.error(err);
+      this.client.emit('error', err);
       return result;
     }
     return result;

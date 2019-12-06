@@ -5,7 +5,7 @@ module.exports = new Command({
   description: 'Need some help?',
   usage: '[command name]',
   aliases: ['h'],
-  async run(message, args) {
+  async run(message) {
     message.channel.send('Need sum help m8?');
   },
 });
