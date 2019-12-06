@@ -159,6 +159,20 @@ module.exports = class Text {
 
     return string.map(n => parseFloat(n, 10)).filter(n => !Number.isNaN(n));
   }
+
+  static splitArguments(content, prefix) {
+    const args = content
+      .trim()
+      .substr(prefix.length)
+      // collapse spaces
+      .replace(/(\s\s+|\n)/g, ' ')
+      .split(/ +/);
+    const name = args.shift();
+    return {
+      name: name ? name.toLowerCase() : '',
+      args,
+    };
+  }
 };
 </code></pre>
         </article>
