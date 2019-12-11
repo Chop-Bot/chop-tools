@@ -27,6 +27,10 @@ class ListenerRunner {
     this.client.on('message', message => {
       if (message.author.bot) return;
 
+      // When she first joins a server there may not be a guild object yet.
+      if (!message.guild) {
+        return;
+      }
       if (this.client.listeners.ignored.guilds.has(message.guild.id)) return;
       if (this.client.listeners.ignored.channels.has(message.channel.id)) return;
 
