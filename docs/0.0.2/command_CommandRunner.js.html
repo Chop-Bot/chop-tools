@@ -65,6 +65,7 @@ const CommandError = require('./CommandError');
 const Middleware = require('./Middleware');
 const MiddlewareError = require('./MiddlewareError');
 const Util = require('../util/Util');
+const Text = require('../util/Text');
 
 /**
  * Runs commands in Chop.
@@ -93,7 +94,7 @@ class CommandRunner extends Middleware {
    * @memberof CommandRunner
    */
   listen() {
-    this.client.on('message', (message) => {
+    this.client.on('message', message => {
       const content = message.content.trim().toLowerCase();
       const isPrefixed = content.replace(/\s\s+/g, ' ').startsWith(this.options.prefix);
       if (!isPrefixed || (message.author.bot &amp;&amp; !this.options.allowBots)) return;
@@ -126,7 +127,7 @@ class CommandRunner extends Middleware {
       }
 
       try {
-        this.go(call, (commandCall) => {
+        this.go(call, commandCall => {
           this.run(message, commandCall);
         });
       } catch (e) {
@@ -148,29 +149,20 @@ class CommandRunner extends Middleware {
       if (this.options.showNotFoundMessage) {
         this.sendMessage(message.channel, this.options.messages.commandNotFound);
         if (this.options.findBestMatch) {
-          this.sendMessage(
-            message.channel,
-            Util.format(this.options.messages.bestMatch, call.bestMatch),
-          );
+          this.sendMessage(message.channel, Util.format(this.options.messages.bestMatch, call.bestMatch));
         }
       }
       return;
     }
 
     if (call.command.admin &amp;&amp; !call.isAdmin) {
-      this.sendMessage(
-        message.channel,
-        Util.format(this.options.messages.missingPermissions, call.commandName),
-      );
+      this.sendMessage(message.channel, Util.format(this.options.messages.missingPermissions, call.commandName));
       return;
     }
 
     if (!call.hasEnoughArgs) {
       // TODO: Implement argument prompting
-      this.sendMessage(
-        message.channel,
-        Util.format(this.options.messages.missingArgument, call.missingArg),
-      );
+      this.sendMessage(message.channel, Util.format(this.options.messages.missingArgument, call.missingArg));
       this.sendMessage(
         message.channel,
         Util.format(
@@ -188,28 +180,49 @@ class CommandRunner extends Middleware {
     if (cooldownLeft > 0) {
       this.sendMessage(
         message.channel,
-        Util.format(
-          this.options.messages.cooldown,
-          Util.secondsToTime(cooldownLeft),
-          call.commandName,
-        ),
+        Util.format(this.options.messages.cooldown, Util.secondsToTime(cooldownLeft), call.commandName),
       );
       return;
     }
 
     this.cooldowns.updateTimeLeft(call.commandName, call.caller);
 
+    const safeSend = (...args) => {
+      const lines = [...args];
+      const lastArg = lines.pop();
+      const msg = Text.lines(...lines, typeof lastArg === 'string' ? lastArg : '');
+      message.channel.send(msg, Util.isObject(lastArg) ? lastArg : undefined).catch(err => {
+        err.command = call.commandName || undefined;
+        err.guild = call.guild ? call.guild.name : undefined;
+        this.client.emit('error', err);
+      });
+    };
+
+    call.command.send = safeSend;
+
     if (call.command.delete) {
-      message.delete({ reason: `Executed the ${call.commandName} command.` })
-        .then(() => {})
-        .catch(() => {});
+      message.delete({ reason: `Executed the ${call.commandName} command.` }).catch(() => {});
     }
 
-    const runCommand = () => new Promise(r => r());
+    // Note to future self: Yes. You did this. Deal with it.
+    const promiseErrorHack = (subject, args, normalErrorHandler) => {
+      try {
+        subject(...args).catch(normalErrorHandler);
+      } catch (err) {
+        if (err instanceof TypeError &amp;&amp; /catch/.test(err.message)) {
+          // This error is from the .catch() above
+        } else {
+          normalErrorHandler(err);
+        }
+      }
+    };
 
-    runCommand().then(() => call.command.run(message, call.args, call)).catch((err) => {
-      this.emitError(new CommandError(call.command, call, err));
-    });
+    // haha fun
+    promiseErrorHack(
+      (...args) => call.command.run(...args),
+      [message, call.args, call],
+      err => this.client.emit('error', new CommandError(call.command, call, err)),
+    );
   }
 
   /**
@@ -219,11 +232,9 @@ class CommandRunner extends Middleware {
    * @memberof CommandRunner
    */
   sendMessage(channel, content) {
-    try {
-      channel.send(content);
-    } catch (e) {
-      this.client.emit('warn', `Chop -> Could not send message: ${content}`);
-    }
+    channel.send(content).catch(err => {
+      this.client.emit('error', err);
+    });
   }
 
   /**
