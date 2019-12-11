@@ -82,7 +82,7 @@ module.exports = class Text {
     }
 
     string = string
-      // removes everything that isn't a number or a dot
+      // removes everything that isn't a number, a dot, a minus sign or a plus sign
       .replace(/[^0-9.\-+]/g, ' ')
       // multiple dots get replaced with space
       .replace(/[.][.]+/g, ' ')
@@ -96,6 +96,7 @@ module.exports = class Text {
       // splits at spaces
       .split(/ +/g);
 
+    // converts everything to numbers and removes the NaN's
     return string.map(n => parseFloat(n, 10)).filter(n => !Number.isNaN(n));
   }
 
