@@ -49,6 +49,8 @@ class ListenerRunner {
             err.stack += `\n\nGuild: ${message.guild ? message.guild.name : undefined}\n`;
             err.stack += `Channel: ${message.channel ? message.channel.name : undefined}\n`;
             err.stack += `Listener: ${listenerName}\n`;
+            err.guild = message.guild;
+            err.channel = message.channel;
             this.client.emit('error', err);
           });
         };
