@@ -58,7 +58,7 @@ class ListenerRunner {
         // eslint-disable-next-line no-restricted-syntax
         for (const listener of listenersInThisCategory) {
           let result;
-          listener.send = (msg) => safeSend(listener.name, msg);
+          listener.send = (...msg) => safeSend(listener.name, ...msg);
           try {
             const evaluation = listener.evaluate(message);
             // eslint-disable-next-line no-await-in-loop
