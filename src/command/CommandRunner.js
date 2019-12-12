@@ -130,7 +130,7 @@ class CommandRunner extends Middleware {
       const lines = [...args];
       const lastArg = lines.pop();
       const msg = Text.lines(...lines, typeof lastArg === 'string' ? lastArg : '');
-      message.channel.send(msg, Util.isObject(lastArg) ? lastArg : undefined).catch(err => {
+      return message.channel.send(msg, Util.isObject(lastArg) ? lastArg : undefined).catch(err => {
         err.stack += `\n\nGuild: ${message.guild ? message.guild.name : undefined}\n`;
         err.stack += `Channel: ${message.channel ? message.channel.name : undefined}\n`;
         err.stack += `Command: ${call.commandName}\n`;
