@@ -1,3 +1,6 @@
+const Text = require('../util/Text');
+const Util = require('../util/Util');
+
 /**
  * Runs listeners in Chop.
  * @since v0.0.2
@@ -38,9 +41,22 @@ class ListenerRunner {
 
       // if a listener in a category returns true, skip to the next category
       Object.entries(this.mappedListeners).forEach(async ([category, listenersInThisCategory]) => {
+        const safeSend = (listenerName, ...args) => {
+          const lines = [...args];
+          const lastArg = lines.pop();
+          const msg = Text.lines(...lines, typeof lastArg === 'string' ? lastArg : '');
+          message.channel.send(msg, Util.isObject(lastArg) ? lastArg : undefined).catch(err => {
+            err.stack += `\n\nGuild: ${message.guild ? message.guild.name : undefined}\n`;
+            err.stack += `Channel: ${message.channel ? message.channel.name : undefined}\n`;
+            err.stack += `Listener: ${listenerName}\n`;
+            this.client.emit('error', err);
+          });
+        };
+    
         // eslint-disable-next-line no-restricted-syntax
         for (const listener of listenersInThisCategory) {
           let result;
+          listener.send = (msg) => safeSend(listener.name, msg);
           try {
             const evaluation = listener.evaluate(message);
             // eslint-disable-next-line no-await-in-loop
