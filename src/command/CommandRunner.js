@@ -135,8 +135,8 @@ class CommandRunner extends Middleware {
         err.stack += `\n\nGuild: ${message.guild ? message.guild.name : undefined}\n`;
         err.stack += `Channel: ${message.channel ? message.channel.name : undefined}\n`;
         err.stack += `Command: ${call.commandName}\n`;
-        err.guild = message.guild;
-        err.channel = message.channel;
+        // err.guild = message.guild; // big guild = big spam
+        // err.channel = message.channel;
         this.client.emit('error', err);
       });
     };
