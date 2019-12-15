@@ -1,3 +1,5 @@
+/* eslint-disable no-inner-declarations */
+/* eslint-disable no-loop-func */
 const Text = require('../util/Text');
 const Util = require('../util/Util');
 
@@ -28,6 +30,7 @@ class ListenerRunner {
    */
   listen() {
     this.client.on('message', message => {
+      const channel = () => message.channel;
       if (message.author.bot) return;
 
       // When she first joins a server there may not be a guild object yet.
@@ -39,27 +42,27 @@ class ListenerRunner {
 
       if (!this.client.listeners.size) return;
 
-      // if a listener in a category returns true, skip to the next category
-      Object.entries(this.mappedListeners).forEach(async ([category, listenersInThisCategory]) => {
-        const safeSend = (listenerName, ...args) => {
-          const lines = [...args];
-          const lastArg = lines.pop();
-          const msg = Text.lines(...lines, typeof lastArg === 'string' ? lastArg : '');
-          
-          return message.channel.send(msg, Util.isObject(lastArg) ? lastArg : undefined).catch(err => {
-            err.stack += `\n\nGuild: ${message.guild ? message.guild.name : undefined}\n`;
-            err.stack += `Channel: ${message.channel ? message.channel.name : undefined}\n`;
-            err.stack += `Listener: ${listenerName}\n`;
-            // err.guild = message.guild; // big guild = big spam
-            // err.channel = message.channel;
-            this.client.emit('error', err);
-          });
-        };
-    
-        // eslint-disable-next-line no-restricted-syntax
+      function safeSend(...args) {
+        const lines = [...args];
+        const lastArg = Util.isObject(lines[lines.length-1]) ? lines.pop() : undefined;
+        const msg = Text.lines(...lines, typeof lastArg === 'string' ? lastArg : '');
+
+        return channel().send(msg, lastArg).then(() => {
+          // throw new Error('This is for test')
+        }).catch(err => {
+          err.stack += `\n\nGuild: ${message.guild ? message.guild.name : undefined}\n`;
+          err.stack += `Channel: ${message.channel ? message.channel.name : undefined}\n`;
+          this.client.emit('error', err);
+        });
+      }
+
+      const entries = Object.entries(this.mappedListeners);
+
+      const runListenersInCategory = async (listenersInThisCategory) => {
         for (const listener of listenersInThisCategory) {
+          // inject safe send
+          listener.send = (...args) => safeSend(...args);
           let result;
-          listener.send = (...msg) => safeSend(listener.name, ...msg);
           try {
             const evaluation = listener.evaluate(message);
             // eslint-disable-next-line no-await-in-loop
@@ -69,15 +72,19 @@ class ListenerRunner {
             break;
           }
           if (result === true) {
-            this.client.emit(
-              'debug',
-              `Skipping listeners in the "${listener.category}" category because "${listener.name}" returned true. ` +
-                `Current iteration: (${category})`,
-            );
             break;
           }
         }
-      });
+      }
+
+      const runAllListeners = () => {
+        for (const [category, listenersInThisCategory] of entries) {
+          runListenersInCategory(listenersInThisCategory)
+            .catch(console.log);
+        }
+      }
+
+      runAllListeners();
     });
   }
 }
