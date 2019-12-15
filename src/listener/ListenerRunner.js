@@ -42,23 +42,30 @@ class ListenerRunner {
 
       if (!this.client.listeners.size) return;
 
+      const c = this.client;
+
       function safeSend(...args) {
         const lines = [...args];
-        const lastArg = Util.isObject(lines[lines.length-1]) ? lines.pop() : undefined;
+        const lastArg = Util.isObject(lines[lines.length - 1]) ? lines.pop() : undefined;
         const msg = Text.lines(...lines, typeof lastArg === 'string' ? lastArg : '');
 
-        return channel().send(msg, lastArg).then(() => {
-          // throw new Error('This is for test')
-        }).catch(err => {
-          err.stack += `\n\nGuild: ${message.guild ? message.guild.name : undefined}\n`;
-          err.stack += `Channel: ${message.channel ? message.channel.name : undefined}\n`;
-          this.client.emit('error', err);
-        });
+        return channel()
+          .send(msg, lastArg)
+          .then(sentMessage => {
+            if (c && c.logger && sentMessage && sentMessage.guild && sentMessage.guild.name) {
+              c.logger.debug('Sending listener message to guild:', sentMessage.guild.name);
+            }
+          })
+          .catch(err => {
+            err.stack += `\n\nGuild: ${message.guild ? message.guild.name : undefined}\n`;
+            err.stack += `Channel: ${message.channel ? message.channel.name : undefined}\n`;
+            this.client.emit('error', err);
+          });
       }
 
       const entries = Object.entries(this.mappedListeners);
 
-      const runListenersInCategory = async (listenersInThisCategory) => {
+      const runListenersInCategory = async listenersInThisCategory => {
         for (const listener of listenersInThisCategory) {
           // inject safe send
           listener.send = (...args) => safeSend(...args);
@@ -75,14 +82,13 @@ class ListenerRunner {
             break;
           }
         }
-      }
+      };
 
       const runAllListeners = () => {
         for (const [category, listenersInThisCategory] of entries) {
-          runListenersInCategory(listenersInThisCategory)
-            .catch(console.log);
+          runListenersInCategory(listenersInThisCategory).catch(console.log);
         }
-      }
+      };
 
       runAllListeners();
     });
