@@ -29,5 +29,6 @@ module.exports = {
     'max-len': ['warn', { code: 120, comments: 150 }],
     'arrow-parens': 'off',
     'object-curly-newline': 'off',
+    'no-restricted-syntax': 'off',
   },
 };
