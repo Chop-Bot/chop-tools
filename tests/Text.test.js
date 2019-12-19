@@ -167,6 +167,7 @@ describe('Text class', () => {
       expect(Text.numbers('[123,12,22]: 28 (14) **99** (0 )0 1_2')).toEqual([123, 12, 22, 28, 14, 99, 0, 0, 1, 2]);
       expect(Text.numbers('!randomnumber min 25 max 88')).toEqual([25, 88]);
       expect(Text.numbers('!randomnumber min -100 max 100')).toEqual([-100, 100]);
+      expect(Text.numbers('0[object Object]-4[object Object]')).toEqual([0, -4]);
     });
 
     test('should handle plus and minus signs', () => {
