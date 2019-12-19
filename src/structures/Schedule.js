@@ -17,7 +17,7 @@ class Schedule {
     if (!client) {
       throw new Error('Missing client in Schedule constructor.');
     }
-    if (!client) {
+    if (!tasks) {
       throw new Error('Missing tasks in Schedule constructor.');
     }
     this.client = client;
