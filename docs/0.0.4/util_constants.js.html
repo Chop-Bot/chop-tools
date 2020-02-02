@@ -1,0 +1,191 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: util/constants.js | Chop Tools</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="width: 32px; height: 32px">
+        
+            <a href="https://github.com/Chop-Bot/chop-tools" rel="noopener noreferrer" target="_blank">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABsklEQVRYhb2Xr5LCMBDGv9xgiUbEMoOvQlLPc3QqeJoTN3kOfJGn6pnBVqDDAwTRa5uG/NkUcp8CkuH7ZXe76TJY0lpr+7dPijHGzO8r27zen3L6Q2utTYiVuVDvTzhuRFaAen+aQTCXeVHxLOatVACA873Dz+83GGNsZW8qKg7edFkAikqMEINeAFy63JZF5LBV0T0kAKAPW4qotUQC6E8icL53aB7X4N5yvcNxI0inJwOYEAC8EKnmAPDlW7jcOC43DlVOoTxsFY4bgXK9I5mrUoz/kwwA9HlvpYpC+MxbqaK1E03B+d4BUqCoxPh4mukAsNicBDDmOwDhM28eV2e6kgDiEJNsc4qCNWBDuGriHXMg4TEcIAAAUuCwna8tMQcSIpBLSQDD4+a6LYuKe3vERwBMc9dtyZtuEQQJwGdud7klENEiDJlPjWZqRD2EAOSHbsOQ+bzi3RBvtWKq+fQ5PRJegLHLNVO3c588DGH3CzKArZB5CCIm8jvhkEtKdfd7aRDkCOSaFxLeCfPoBaCVqq/eDLJnAuBvMgL+bzQzp6IZgAmRU6b5C8AAkRPAHs+fhFQrccapM5EAAAAASUVORK5CYII=" width="100%" height="100%">
+            </a>
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">Chop Tools</a></h1>
+        
+            <span class="version">v0.0.4</span>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+        <ol class="lnb-tab">
+            <li id="api-tab">
+                <a href="#"><h4>API</h4></a>
+            </li>
+            <li id="examples-tab">
+                <a href="#"><h4>Guides</h4></a>
+            </li>
+        </ol>
+    
+    <div class="lnb-examples hidden"><h3>Guides</h3><ul><li><a href="tutorial-01 - Getting Started.html">01 - Getting Started</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="01 - Getting Started_sub"></div></li><li><a href="tutorial-02 - Creating Commands.html">02 - Creating Commands</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="02 - Creating Commands_sub"></div></li><li><a href="tutorial-03 - More on Commands.html">03 - More on Commands</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="03 - More on Commands_sub"></div></li><li><a href="tutorial-04 - Tasks.html">04 - Tasks</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="04 - Tasks_sub"></div></li><li><a href="tutorial-05 - Configuration.html">05 - Configuration</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="05 - Configuration_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Externals</h3><ul><li><a href="external-Client.html">Client</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Client_sub"></div></li><li><a href="external-ClientOptions.html">ClientOptions</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:ClientOptions_sub"></div></li><li><a href="external-Message.html">Message</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Message_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="ChopClient.html">ChopClient</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="ChopClient_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="ChopClient.html#commands">commands</a></li><li><a href="ChopClient.html#listeners">listeners</a></li><li><a href="ChopClient.html#schedule">schedule</a></li></ul></div></li><li><a href="Command.html">Command</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Command_sub"></div></li><li><a href="CommandCall.html">CommandCall</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="CommandCall_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="CommandCall.html#parseAndSave">parseAndSave</a></li></ul></div></li><li><a href="CommandError.html">CommandError</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="CommandError_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="CommandError.html#call">call</a></li><li><a href="CommandError.html#error">error</a></li></ul></div></li><li><a href="CommandRunner.html">CommandRunner</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="CommandRunner_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="CommandRunner.html#cooldowns">cooldowns</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="CommandRunner.html#emitError">emitError</a></li><li><a href="CommandRunner.html#listen">listen</a></li><li><a href="CommandRunner.html#run">run</a></li><li><a href="CommandRunner.html#sendMessage">sendMessage</a></li></ul></div></li><li><a href="CommandStore.html">CommandStore</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="CommandStore_sub"></div></li><li><a href="Configuration.html">Configuration</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Configuration_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Configuration.html#.getChopJsConfig">getChopJsConfig</a></li><li><a href="Configuration.html#.getChopJsonConfig">getChopJsonConfig</a></li><li><a href="Configuration.html#.getConfig">getConfig</a></li><li><a href="Configuration.html#.getPackageJsonConfig">getPackageJsonConfig</a></li><li><a href="Configuration.html#.hasChopJsConfig">hasChopJsConfig</a></li><li><a href="Configuration.html#.hasChopJsonConfig">hasChopJsonConfig</a></li><li><a href="Configuration.html#.hasConfigs">hasConfigs</a></li><li><a href="Configuration.html#.hasPackageJsonConfig">hasPackageJsonConfig</a></li></ul></div></li><li><a href="CooldownManager.html">CooldownManager</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="CooldownManager_sub"></div></li><li><a href="FileLoader.html">FileLoader</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="FileLoader_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="FileLoader.html#client">client</a></li><li><a href="FileLoader.html#root">root</a></li></ul></div></li><li><a href="Listener.html">Listener</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Listener_sub"></div></li><li><a href="ListenerCall.html">ListenerCall</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="ListenerCall_sub"></div></li><li><a href="ListenerIgnoreList.html">ListenerIgnoreList</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="ListenerIgnoreList_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="ListenerIgnoreList.html#clear">clear</a></li><li><a href="ListenerIgnoreList.html#ignoreChannel">ignoreChannel</a></li><li><a href="ListenerIgnoreList.html#ignoreGuild">ignoreGuild</a></li><li><a href="ListenerIgnoreList.html#listenChannel">listenChannel</a></li><li><a href="ListenerIgnoreList.html#listenGuild">listenGuild</a></li></ul></div></li><li><a href="ListenerRunner.html">ListenerRunner</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="ListenerRunner_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="ListenerRunner.html#listen">listen</a></li></ul></div></li><li><a href="ListenerStore.html">ListenerStore</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="ListenerStore_sub"></div></li><li><a href="Schedule.html">Schedule</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Schedule_sub"></div></li><li><a href="Task.html">Task</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Task_sub"></div></li><li><a href="TaskStore.html">TaskStore</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="TaskStore_sub"></div></li></ul></div><div class="lnb-api hidden"><h3><a href="global.html">Global</a></h3></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @typedef {Object} ChopOptions
+ * @property {string} prefix The prefix used for commands.
+ * @property {string} [root=null]
+ * Path to the directory Chop will look for commands, tasks, etc...
+ * If not set, Chop will use the directory where the client was instantiated.
+ * @property {Boolean} [dmHelp=true]
+ * Should the help command send the command list through DMs?
+ * @property {string[]} owners
+ * Super Users.
+ * @property {Boolean} [showNotFoundMessage=false]
+ * Sends a "command not found" message if the prefix is used with an unknown command.
+ * @property {string} [dmCommands='ignore']
+ * How to handle commands in direct messages. Can be one of `ignore`, `allow`, `error`.
+ * If it's set to `ignore` all commands in DMs will be ignored.
+ * If it's set to `allow` commands with 'dm' in their runIn property will be allowed.
+ * If it's set to `error` a "Cannot execute commands in DMs" message will be sent.
+ * @property {boolean} [allowBots=false]
+ * If true other bots can trigger commands. (Not Recommended)
+ * @property {Boolean} [findBestMatch=false]
+ * If a command cannot be found try to look for a similar named command.
+ * @property {number} [defaultCooldown=3]
+ * The default cooldown for commands in seconds.
+ * @property {Boolean} [typescript=false]
+ * Set this to true if your project is using typescript. This is for the file loader.
+ * @property {Object} botPermissions
+ * TBD
+ * @property {Object} [messages]
+ * The default messages.
+ * @property {string} [message.commandNotFound]
+ * The message to send when a command is not found.
+ * @property {string} [message.bestMatch]
+ * If findBestMatch is true this message will be sent when a user
+ * tries to use a command that doesn't exist.
+ * {0} will be replaced with the command with the closet name.
+ * @property {string} [message.usageMessage]
+ * The message to send when a user doesn't meet a command's expecting args.
+ * {0} will be replaced with the prefix.
+ * {1} will be replaced with the command name.
+ * {2} will be replaced with the command usage.
+ * @property {string} [message.missingArgument]
+ * When the user doesn't pass enough arguments this message is sent.
+ * {0} will be replaced with the name of the missing argument.
+ * @property {string} [message.missingPermissions]
+ * When the user doesn't have the correct permissions this message is sent.
+ * {0} will be replaced with the command name.
+ * @property {string} [message.directMessageError]
+ * If dmCommands is set to `error` this message is sent when a user tries to use a command in a dm.
+ * @property {string} [message.directMessageErrorSpecific]
+ * This message is sent if dmCommands is set to `allow` and
+ * the command doesn't have `dm` in its `runIn` array.
+ * {0} will be replaced with the command name.
+ * @property {string} [message.commandNotFound]
+ * The message to send when a user tries to use a command while on cooldown.
+ * {0} will be replaced with the remaining time.
+ * {1} will be replaced with the command name.
+ * @since v0.0.1
+ */
+
+exports.DEFAULT_CONFIG = {
+  prefix: '',
+  dmHelp: true,
+  owners: [''],
+  showNotFoundMessage: false,
+  dmCommands: 'ignore',
+  allowBots: false,
+  findBestMatch: true,
+  defaultCooldown: 3,
+  typescript: false,
+  botPermissions: {
+    PLACEHOLDER: true,
+  },
+  messages: {
+    commandNotFound: 'I could not find that command.',
+    bestMatch: 'Did you mean **{0}**?',
+    usageMessage: '```{0}{1} {2}``` To learn more about the **{1}** command use `{0}help {1}`',
+    missingArgument: 'You are missing the **{0}** argument.',
+    missingPermissions: 'You do not have enough permissions to use the **{0}** command.',
+    directMessageError: 'I cannot execute commands in DMs!',
+    directMessageErrorSpecific: 'I cannot execute the **{0}** command in DMs!',
+    cooldown: 'Please wait **{0}** before using the **{1}** command again.',
+  },
+};
+
+/**
+ * The discord.js Message class.
+ * @external Message
+ * @see {@link https://discord.js.org/#/docs/main/master/class/Message|Message}
+ */
+
+exports.DEFAULT_COMMAND_OPTIONS = {
+  aliases: [],
+  permissions: [],
+  cooldown: 3,
+  runIn: ['text'],
+  hidden: false,
+  args: [],
+  delete: false,
+  run: () => {},
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABsklEQVRYhb2Xr5LCMBDGv9xgiUbEMoOvQlLPc3QqeJoTN3kOfJGn6pnBVqDDAwTRa5uG/NkUcp8CkuH7ZXe76TJY0lpr+7dPijHGzO8r27zen3L6Q2utTYiVuVDvTzhuRFaAen+aQTCXeVHxLOatVACA873Dz+83GGNsZW8qKg7edFkAikqMEINeAFy63JZF5LBV0T0kAKAPW4qotUQC6E8icL53aB7X4N5yvcNxI0inJwOYEAC8EKnmAPDlW7jcOC43DlVOoTxsFY4bgXK9I5mrUoz/kwwA9HlvpYpC+MxbqaK1E03B+d4BUqCoxPh4mukAsNicBDDmOwDhM28eV2e6kgDiEJNsc4qCNWBDuGriHXMg4TEcIAAAUuCwna8tMQcSIpBLSQDD4+a6LYuKe3vERwBMc9dtyZtuEQQJwGdud7klENEiDJlPjWZqRD2EAOSHbsOQ+bzi3RBvtWKq+fQ5PRJegLHLNVO3c588DGH3CzKArZB5CCIm8jvhkEtKdfd7aRDkCOSaFxLeCfPoBaCVqq/eDLJnAuBvMgL+bzQzp6IZgAmRU6b5C8AAkRPAHs+fhFQrccapM5EAAAAASUVORK5CYII=" style="width: 32px; height: 32px">
+    <div class="footer-text">A discord bot framework based on discord.js.</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = '_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>

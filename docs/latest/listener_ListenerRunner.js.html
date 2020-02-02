@@ -30,7 +30,7 @@
     <div class="title">
         <h1><a href="index.html" class="link">Chop Tools</a></h1>
         
-            <span class="version">v0.0.2</span>
+            <span class="version">v0.0.4</span>
         
     </div>
     <div class="search-container" id="search-container">
@@ -59,7 +59,12 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
+            <pre class="prettyprint source linenums"><code>/* eslint-disable no-inner-declarations */
+/* eslint-disable no-loop-func */
+const Text = require('../util/Text');
+const Util = require('../util/Util');
+
+/**
  * Runs listeners in Chop.
  * @since v0.0.2
  */
@@ -86,6 +91,7 @@ class ListenerRunner {
    */
   listen() {
     this.client.on('message', message => {
+      const channel = () => message.channel;
       if (message.author.bot) return;
 
       // When she first joins a server there may not be a guild object yet.
@@ -97,10 +103,33 @@ class ListenerRunner {
 
       if (!this.client.listeners.size) return;
 
-      // if a listener in a category returns true, skip to the next category
-      Object.entries(this.mappedListeners).forEach(async ([category, listenersInThisCategory]) => {
-        // eslint-disable-next-line no-restricted-syntax
+      const c = this.client;
+
+      function safeSend(...args) {
+        const lines = [...args];
+        const lastArg = Util.isObject(lines[lines.length - 1]) ? lines.pop() : undefined;
+        const msg = Text.lines(...lines, typeof lastArg === 'string' ? lastArg : '');
+
+        return channel()
+          .send(msg, lastArg)
+          .then(sentMessage => {
+            if (c &amp;&amp; c.logger &amp;&amp; sentMessage &amp;&amp; sentMessage.guild &amp;&amp; sentMessage.guild.name) {
+              c.logger.debug('Sending listener message to guild:', sentMessage.guild.name);
+            }
+          })
+          .catch(err => {
+            err.stack += `\n\nGuild: ${message.guild ? message.guild.name : undefined}\n`;
+            err.stack += `Channel: ${message.channel ? message.channel.name : undefined}\n`;
+            this.client.emit('error', err);
+          });
+      }
+
+      const entries = Object.entries(this.mappedListeners);
+
+      const runListenersInCategory = async listenersInThisCategory => {
         for (const listener of listenersInThisCategory) {
+          // inject safe send
+          listener.send = (...args) => safeSend(...args);
           let result;
           try {
             const evaluation = listener.evaluate(message);
@@ -111,15 +140,18 @@ class ListenerRunner {
             break;
           }
           if (result === true) {
-            this.client.emit(
-              'debug',
-              `Skipping listeners in the "${listener.category}" category because "${listener.name}" returned true. ` +
-                `Current iteration: (${category})`,
-            );
             break;
           }
         }
-      });
+      };
+
+      const runAllListeners = () => {
+        for (const [category, listenersInThisCategory] of entries) {
+          runListenersInCategory(listenersInThisCategory).catch(console.log);
+        }
+      };
+
+      runAllListeners();
     });
   }
 }
