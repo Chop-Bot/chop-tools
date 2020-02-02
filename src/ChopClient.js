@@ -85,11 +85,15 @@ class ChopClient extends Discord.Client {
     this.use = (...args) => this._commandRunner.use(...args);
   }
 
-  async login(token) {
+  async login(token, { skipCommandRunner, skipListenerRunner }) {
     // TODO: For the love of all gods, make this async!
     // FIXME: PLEASE.
-    this._commandRunner.listen();
-    this._listenerRunner.listen();
+    if (!skipCommandRunner) {
+      this._commandRunner.listen();
+    }
+    if (!skipListenerRunner) {
+      this._listenerRunner.listen();
+    }
     this.emit('debug', `Loaded ${this.commands.size} commands.`);
     this.emit('debug', `Loaded ${this.schedule.tasks.size} tasks.`);
     this.emit('debug', `Loaded ${this.listeners.size} listeners.`);
