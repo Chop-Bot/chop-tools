@@ -26,8 +26,9 @@ const Text = require('../util/Text');
  * @property {Date} time When the command was called.
  */
 class CommandCall {
-  constructor(client, message) {
+  constructor(client, message, prefix) {
     this.client = client;
+    this.prefix = prefix || client.options.prefix;
 
     // Known
     this.caller = message.author.id;
@@ -62,7 +63,7 @@ class CommandCall {
    * @returns {CommandCall} The parsed command call.
    */
   parseAndSave(message) {
-    const { args, name } = Text.splitArguments(message.content, this.client.options.prefix);
+    const { args, name } = Text.splitArguments(message.content, this.prefix);
     // const args = this.splitArguments(message.content).slice(1);
     // let name = args.shift();
     // name = name ? name.toLowerCase() : null;

@@ -33,48 +33,71 @@ class CommandRunner extends Middleware {
    * @memberof CommandRunner
    */
   listen() {
-    this.client.on('message', message => {
-      const content = message.content.trim().toLowerCase();
-      const isPrefixed = content.replace(/\s\s+/g, ' ').startsWith(this.options.prefix);
-      if (!isPrefixed || (message.author.bot && !this.options.allowBots)) return;
+    this.client.on('message', message => this.onMessage(message));
+  }
 
-      const isDM = message.channel.type === 'dm';
-      if (isDM && this.options.dmCommands === 'ignore') return;
-      if (isDM && this.options.dmCommands === 'error') {
-        this.sendMessage(message.channel, this.options.messages.directMessageError);
-        return;
-      }
+  onMessage(message, prefixMap) {
+    const isPrefixed = this.validatePrefix(message, prefixMap);
+    if (!isPrefixed || (message.author.bot && !this.options.allowBots)) return;
 
-      const call = new CommandCall(this.client, message);
+    const isDM = message.channel.type === 'dm';
+    if (isDM && this.options.dmCommands === 'ignore') return;
+    if (isDM && this.options.dmCommands === 'error') {
+      this.sendMessage(message.channel, this.options.messages.directMessageError);
+      return;
+    }
 
-      if (!call.commandExists) {
-        if (this.options.showNotFoundMessage) {
-          this.sendMessage(message.channel, this.options.messages.commandNotFound);
-          if (call.bestMatch) {
-            message.channel.send(Util.format(this.options.messages.bestMatch, call.bestMatch));
-          }
+    const call = new CommandCall(this.client, message, isPrefixed);
+
+    if (!call.commandExists) {
+      if (this.options.showNotFoundMessage) {
+        this.sendMessage(message.channel, this.options.messages.commandNotFound);
+        if (call.bestMatch) {
+          message.channel.send(Util.format(this.options.messages.bestMatch, call.bestMatch));
         }
-        return;
       }
+      return;
+    }
 
-      if (call.isDM && !call.command.runIn.includes('dm')) {
-        this.sendMessage(
-          message.channel,
-          Util.format(this.options.messages.directMessageErrorSpecific, call.commandName),
-        );
-        return;
-      }
+    if (call.isDM && !call.command.runIn.includes('dm')) {
+      this.sendMessage(
+        message.channel,
+        Util.format(this.options.messages.directMessageErrorSpecific, call.commandName),
+      );
+      return;
+    }
 
-      try {
-        this.go(call, commandCall => {
-          this.run(message, commandCall);
-        });
-      } catch (e) {
-        const error = new MiddlewareError('An error happened in a middleware.', call);
-        error.stack += `\nORIGINAL STACK:\n${e.stack}`;
-        this.client.emit('error', error);
-      }
-    });
+    try {
+      this.go(call, commandCall => {
+        this.run(message, commandCall);
+      });
+    } catch (e) {
+      const error = new MiddlewareError('An error happened in a middleware.', call);
+      error.stack += `\nORIGINAL STACK:\n${e.stack}`;
+      this.client.emit('error', error);
+    }
+  }
+
+  validatePrefix(message, prefixMap) {
+    const content = message.content
+      .trim()
+      .toLowerCase()
+      .replace(/\s\s+/g, ' ');
+
+    if (!prefixMap) {
+      return content.startsWith(this.options.prefix) ? this.options.prefix : false;
+    }
+
+    const guildId = message.guild.id;
+
+    const prefix = prefixMap.get(guildId);
+
+    // do not run command with normal prefix if a custom prefix is set
+    if (prefix && content.startsWith(this.options.prefix)) {
+      return false;
+    }
+
+    return prefix && content.startsWith(prefix) ? prefix : false;
   }
 
   /**
@@ -88,20 +111,29 @@ class CommandRunner extends Middleware {
       if (this.options.showNotFoundMessage) {
         this.sendMessage(message.channel, this.options.messages.commandNotFound);
         if (this.options.findBestMatch) {
-          this.sendMessage(message.channel, Util.format(this.options.messages.bestMatch, call.bestMatch));
+          this.sendMessage(
+            message.channel,
+            Util.format(this.options.messages.bestMatch, call.bestMatch),
+          );
         }
       }
       return;
     }
 
     if (call.command.admin && !call.isAdmin) {
-      this.sendMessage(message.channel, Util.format(this.options.messages.missingPermissions, call.commandName));
+      this.sendMessage(
+        message.channel,
+        Util.format(this.options.messages.missingPermissions, call.commandName),
+      );
       return;
     }
 
     if (!call.hasEnoughArgs) {
       // TODO: Implement argument prompting
-      this.sendMessage(message.channel, Util.format(this.options.messages.missingArgument, call.missingArg));
+      this.sendMessage(
+        message.channel,
+        Util.format(this.options.messages.missingArgument, call.missingArg),
+      );
       this.sendMessage(
         message.channel,
         Util.format(
@@ -119,7 +151,11 @@ class CommandRunner extends Middleware {
     if (cooldownLeft > 0) {
       this.sendMessage(
         message.channel,
-        Util.format(this.options.messages.cooldown, Util.secondsToTime(cooldownLeft), call.commandName),
+        Util.format(
+          this.options.messages.cooldown,
+          Util.secondsToTime(cooldownLeft),
+          call.commandName,
+        ),
       );
       return;
     }
@@ -130,7 +166,7 @@ class CommandRunner extends Middleware {
       const lines = [...args];
       const lastArg = lines.pop();
       const msg = Text.lines(...lines, typeof lastArg === 'string' ? lastArg : '');
-      
+
       return message.channel.send(msg, Util.isObject(lastArg) ? lastArg : undefined).catch(err => {
         err.stack += `\n\nGuild: ${message.guild ? message.guild.name : undefined}\n`;
         err.stack += `Channel: ${message.channel ? message.channel.name : undefined}\n`;
