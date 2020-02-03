@@ -88,7 +88,7 @@ class CommandRunner extends Middleware {
       return content.startsWith(this.options.prefix) ? this.options.prefix : false;
     }
 
-    const guildId = message.guild.id;
+    const guildId = message.guild ? message.guild.id : undefined;
 
     const prefix = prefixMap.get(guildId);
 
@@ -97,7 +97,15 @@ class CommandRunner extends Middleware {
       return false;
     }
 
-    return prefix && content.startsWith(prefix) ? prefix : false;
+    if (prefix && content.startsWith(prefix)) {
+      return prefix;
+    }
+
+    if (!prefix && content.startsWith(this.options.prefix)) {
+      return this.options.prefix;
+    }
+
+    return false;
   }
 
   /**
