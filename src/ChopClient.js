@@ -85,7 +85,8 @@ class ChopClient extends Discord.Client {
     this.use = (...args) => this._commandRunner.use(...args);
   }
 
-  async login(token, { skipCommandRunner, skipListenerRunner }) {
+  async login(token, opts = {}) {
+    const { skipCommandRunner, skipListenerRunner } = opts;
     // TODO: For the love of all gods, make this async!
     // FIXME: PLEASE.
     if (!skipCommandRunner) {
